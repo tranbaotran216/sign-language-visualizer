@@ -100,15 +100,16 @@ def build_pdf(
 
     # Per-frame metadata table
     story.append(Paragraph("Per-frame metadata", h2))
-    rows = [["Video", "Label", "sample_idx", "orig_idx", "rgb", "pose", "pair"]]
+    # rows = [["Video", "Label", "sample_idx", "orig_idx", "rgb", "pose", "pair"]]
+    rows = [["Video", "Label", "sample_idx", "orig_idx"]]
     for g in groups:
         for f in g.get("selected_frames", []):
             rows.append([
                 g.get("video_name", ""), g.get("label", ""),
                 str(f.get("sample_index", "")), str(f.get("original_frame_index", "")),
-                os.path.basename(f.get("rgb_path", "") or ""),
-                os.path.basename(f.get("pose_path", "") or ""),
-                os.path.basename(f.get("pair_path", "") or ""),
+                # os.path.basename(f.get("rgb_path", "") or ""),
+                # os.path.basename(f.get("pose_path", "") or ""),
+                # os.path.basename(f.get("pair_path", "") or ""),
             ])
     t = Table(rows, colWidths=[2 * cm, 3 * cm, 1.6 * cm, 1.6 * cm, 3 * cm, 3 * cm, 3 * cm])
     t.setStyle(TableStyle([

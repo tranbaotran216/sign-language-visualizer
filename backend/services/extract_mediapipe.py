@@ -93,31 +93,97 @@ def _landmarks_to_vec(results) -> np.ndarray:
     return vec, has_pose, has_lh, has_rh
 
 
+def _norm_landmarks_to_xy(landmarks, width: int, height: int):
+    if landmarks is None:
+        return None
+    return np.array(
+        [[lm.x * width, lm.y * height] for lm in landmarks.landmark],
+        dtype=np.float32
+    )
+
+
+POSE_CONNECTIONS_LOCAL = [
+    (0, 1), (0, 2),        # nose -> eyes
+    (1, 3), (2, 4),        # eyes -> ears
+    (5, 6),                # shoulders
+    (5, 7), (7, 9),        # left arm
+    (6, 8), (8, 10),       # right arm
+    (5, 11), (6, 12),      # shoulder -> hip
+    (11, 12)               # hips
+]
+
+
 def _draw_pose_image(results, w: int, h: int, frame_bgr=None) -> np.ndarray:
-    """Render landmarks on a black canvas (or over the frame if provided)."""
-    if frame_bgr is None:
-        canvas = np.zeros((h, w, 3), dtype=np.uint8)
-    else:
-        canvas = cv2.resize(frame_bgr, (w, h)).copy()
-        canvas = (canvas * 0.25).astype(np.uint8)
+    """
+    Draw pose giống notebook:
+    - nền đen
+    - chỉ vẽ 13 upper-body pose landmarks
+    - vẽ 2 bàn tay
+    """
+    canvas = np.zeros((h, w, 3), dtype=np.uint8)
 
     if not _HAS_MP:
         return canvas
-    drawing = mp.solutions.drawing_utils
-    styles = mp.solutions.drawing_styles
+
     holistic = mp.solutions.holistic
+    hand_connections = holistic.HAND_CONNECTIONS
+
+    # Pose upper body 13 points
     if results.pose_landmarks:
-        drawing.draw_landmarks(
-            canvas, results.pose_landmarks, holistic.POSE_CONNECTIONS,
-            landmark_drawing_spec=styles.get_default_pose_landmarks_style())
-    if results.left_hand_landmarks:
-        drawing.draw_landmarks(
-            canvas, results.left_hand_landmarks, holistic.HAND_CONNECTIONS,
-            landmark_drawing_spec=styles.get_default_hand_landmarks_style())
-    if results.right_hand_landmarks:
-        drawing.draw_landmarks(
-            canvas, results.right_hand_landmarks, holistic.HAND_CONNECTIONS,
-            landmark_drawing_spec=styles.get_default_hand_landmarks_style())
+        all_pose_xy = _norm_landmarks_to_xy(results.pose_landmarks, w, h)
+        pose_xy = all_pose_xy[POSE_INDICES]
+
+        for a, b in POSE_CONNECTIONS_LOCAL:
+            pa, pb = pose_xy[a], pose_xy[b]
+            cv2.line(
+                canvas,
+                tuple(pa.astype(int)),
+                tuple(pb.astype(int)),
+                (180, 180, 180),
+                2,
+                cv2.LINE_AA
+            )
+
+        for p in pose_xy:
+            cv2.circle(
+                canvas,
+                tuple(p.astype(int)),
+                3,
+                (0, 255, 255),
+                -1,
+                cv2.LINE_AA
+            )
+
+    # Hands
+    for hand_lms, color in [
+        (results.left_hand_landmarks, (255, 180, 0)),
+        (results.right_hand_landmarks, (0, 220, 255)),
+    ]:
+        hand_xy = _norm_landmarks_to_xy(hand_lms, w, h)
+        if hand_xy is None:
+            continue
+
+        for a, b in hand_connections:
+            pa, pb = hand_xy[a], hand_xy[b]
+            cv2.line(
+                canvas,
+                tuple(pa.astype(int)),
+                tuple(pb.astype(int)),
+                color,
+                2,
+                cv2.LINE_AA
+            )
+
+        for p in hand_xy:
+            cv2.circle(
+                canvas,
+                tuple(p.astype(int)),
+                2,
+                color,
+                -1,
+                cv2.LINE_AA
+            )
+
     return canvas
 
 
@@ -248,7 +314,7 @@ def extract_video(
                 res = holistic.process(rgb)
                 vec, has_pose, has_lh, has_rh = _landmarks_to_vec(res)
                 keypoints[si] = vec
-                pose_img = _draw_pose_image(res, config.tile_w, config.tile_h, frame_bgr=frame)
+                pose_img = _draw_pose_image(res, frame.shape[1], frame.shape[0])
             else:
                 has_pose = has_lh = has_rh = False
                 pose_img = np.zeros((config.tile_h, config.tile_w, 3), dtype=np.uint8)
