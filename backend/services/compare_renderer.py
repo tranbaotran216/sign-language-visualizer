@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional, Tuple
+import math
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -139,7 +140,52 @@ def render_comparison(
             x += cell_w + layout.cell_gap
         y += row_h + layout.row_gap
 
+    # Annotations are applied by caller via apply_annotations() so editor edits compose.
     return canvas
+
+
+def _draw_arrow(draw: ImageDraw.ImageDraw, x1, y1, x2, y2, color, width):
+    draw.line([(x1, y1), (x2, y2)], fill=color, width=width)
+    # arrow head
+    ang = math.atan2(y2 - y1, x2 - x1)
+    head = max(10, width * 4)
+    for a in (ang + math.radians(150), ang - math.radians(150)):
+        hx = x2 + head * math.cos(a)
+        hy = y2 + head * math.sin(a)
+        draw.line([(x2, y2), (hx, hy)], fill=color, width=width)
+
+
+def apply_annotations(img: Image.Image, annotations: List[Dict]) -> Image.Image:
+    """Annotation dicts:
+      {type: 'text', x, y, text, color, font_size}
+      {type: 'rect', x, y, w, h, color, stroke}
+      {type: 'arrow', x1, y1, x2, y2, color, stroke}
+    Coordinates are in canvas pixels.
+    """
+    if not annotations:
+        return img
+    out = img.convert("RGBA")
+    overlay = Image.new("RGBA", out.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(overlay)
+    for a in annotations:
+        t = a.get("type")
+        color = a.get("color", "#ff2d2d")
+        stroke = int(a.get("stroke", 3))
+        try:
+            if t == "text":
+                font = _load_font(int(a.get("font_size", 22)))
+                d.text((float(a.get("x", 0)), float(a.get("y", 0))),
+                       str(a.get("text", "")), fill=color, font=font)
+            elif t == "rect":
+                x, y = float(a["x"]), float(a["y"])
+                w, h = float(a["w"]), float(a["h"])
+                d.rectangle([x, y, x + w, y + h], outline=color, width=stroke)
+            elif t == "arrow":
+                _draw_arrow(d, float(a["x1"]), float(a["y1"]),
+                            float(a["x2"]), float(a["y2"]), color, stroke)
+        except Exception:
+            continue
+    return Image.alpha_composite(out, overlay).convert("RGB")
 
 
 def caption_en(labels: List[str]) -> str:

@@ -19,7 +19,10 @@ from pydantic import BaseModel
 from services import safe_label as _safe_label, safe_video_name as _safe_vid
 from services.csv_metadata import load_csv, detect_columns, build_mapping, preview_rows, lookup_label
 from services.extract_mediapipe import ExtractConfig, extract_video
-from services.compare_renderer import LayoutSettings, render_comparison, caption_en as _cap_en, caption_vi as _cap_vi
+from services.compare_renderer import (
+    LayoutSettings, render_comparison, apply_annotations,
+    caption_en as _cap_en, caption_vi as _cap_vi,
+)
 from services.pdf_report import build_pdf
 from services.filename_parser import parse_filename
 
@@ -291,17 +294,7 @@ def delete_output(project_dir: str):
 
 
 # ================================================================ COMPARE
-@app.post("/api/compare")
-async def create_comparison(payload: Dict = Body(...)):
-    """payload = {
-        groups: [{video_name, label, safe_label?, source?,
-                  selected_frames:[{sample_index, original_frame_index,
-                                    rgb_path?, pose_path?, pair_path?}]}],
-        layout: {...}, caption_en?, caption_vi?,
-        include_quality_report: bool
-    }
-    Paths are relative to backend/outputs/ (or absolute).
-    """
+def _render_and_persist(payload: Dict, comparison_id: Optional[str] = None) -> Dict:
     groups = payload.get("groups", [])
     if len(groups) < 2 or len(groups) > 5:
         raise HTTPException(400, "Cần 2 đến 5 nhóm video để so sánh.")
@@ -311,14 +304,16 @@ async def create_comparison(payload: Dict = Body(...)):
     labels = [g.get("label", "") for g in groups]
     cap_en = payload.get("caption_en") or _cap_en(labels)
     cap_vi = payload.get("caption_vi") or _cap_vi(labels)
-
     safe_labels = [_safe_label(l) for l in labels]
-    comparison_id = "_vs_".join(safe_labels) + "_" + uuid.uuid4().hex[:6]
+    annotations = payload.get("annotations", []) or []
+
+    if not comparison_id:
+        comparison_id = "_vs_".join(safe_labels) + "_" + uuid.uuid4().hex[:6]
     out_dir = os.path.join(COMPARISONS_DIR, comparison_id)
     os.makedirs(out_dir, exist_ok=True)
 
-    # Render image. base_dir = OUTPUTS_DIR so paths like "A0009_doc_ac/frames/pair/..." resolve.
     img = render_comparison(groups, layout, base_dir=OUTPUTS_DIR)
+    img = apply_annotations(img, annotations)
     img_name = "_vs_".join(safe_labels) + ".jpg"
     png_name = "_vs_".join(safe_labels) + ".png"
     pdf_name = "_vs_".join(safe_labels) + ".pdf"
@@ -330,7 +325,6 @@ async def create_comparison(payload: Dict = Body(...)):
     img.save(img_path, "JPEG", quality=92)
     img.save(png_path, "PNG")
 
-    # Collect quality reports if requested
     quality_reports = {}
     if payload.get("include_quality_report", True):
         for g in groups:
@@ -342,27 +336,23 @@ async def create_comparison(payload: Dict = Body(...)):
                     quality_reports[g.get("video_name", "")] = json.load(f)
 
     build_pdf(
-        out_path=pdf_path,
-        comparison_image_path=img_path,
+        out_path=pdf_path, comparison_image_path=img_path,
         caption_en=cap_en, caption_vi=cap_vi,
         groups=[{**g, "safe_label": _safe_label(g.get("label", ""))} for g in groups],
         layout=payload.get("layout", {}),
-        quality_reports=quality_reports,
-        created_at=_now(),
+        quality_reports=quality_reports, created_at=_now(),
     )
 
     config_full = {
-        "comparison_id": comparison_id,
-        "labels": labels,
-        "safe_labels": safe_labels,
+        "comparison_id": comparison_id, "labels": labels, "safe_labels": safe_labels,
         "caption_en": cap_en, "caption_vi": cap_vi,
-        "layout": layout.__dict__,
-        "groups": groups,
+        "layout": layout.__dict__, "groups": groups,
+        "annotations": annotations,
+        "created_at": _now(),
     }
     with open(cfg_path, "w", encoding="utf-8") as f:
         json.dump(config_full, f, ensure_ascii=False, indent=2)
 
-    # zip
     zip_path = os.path.join(out_dir, "comparison_outputs.zip")
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for fn in (img_name, png_name, pdf_name, cfg_name):
@@ -376,9 +366,67 @@ async def create_comparison(payload: Dict = Body(...)):
         "comparison_pdf_url": f"{base_url}/{pdf_name}",
         "comparison_config_json_url": f"{base_url}/{cfg_name}",
         "comparison_zip_url": f"{base_url}/comparison_outputs.zip",
-        "caption_en": cap_en,
-        "caption_vi": cap_vi,
+        "caption_en": cap_en, "caption_vi": cap_vi,
+        "config": config_full,
     }
+
+
+@app.post("/api/compare")
+async def create_comparison(payload: Dict = Body(...)):
+    return _render_and_persist(payload)
+
+
+@app.post("/api/compare/{comparison_id}/rerender")
+async def rerender_comparison(comparison_id: str, payload: Dict = Body(...)):
+    out_dir = os.path.join(COMPARISONS_DIR, comparison_id)
+    if not os.path.isdir(out_dir):
+        raise HTTPException(404, "Comparison not found")
+    return _render_and_persist(payload, comparison_id=comparison_id)
+
+
+@app.get("/api/comparisons")
+def list_comparisons():
+    items = []
+    if not os.path.isdir(COMPARISONS_DIR):
+        return {"items": []}
+    for name in sorted(os.listdir(COMPARISONS_DIR), reverse=True):
+        p = os.path.join(COMPARISONS_DIR, name)
+        if not os.path.isdir(p):
+            continue
+        cfg_path = os.path.join(p, "config.json")
+        cfg = None
+        if os.path.exists(cfg_path):
+            try:
+                with open(cfg_path, encoding="utf-8") as f:
+                    cfg = json.load(f)
+            except Exception:
+                pass
+        files = os.listdir(p)
+        img = next((f for f in files if f.endswith(".jpg")), None)
+        pdf = next((f for f in files if f.endswith(".pdf")), None)
+        base_url = f"/files/_comparisons/{name}"
+        items.append({
+            "comparison_id": name,
+            "created_at": (cfg or {}).get("created_at") or datetime.fromtimestamp(os.path.getctime(p)).isoformat(timespec="seconds"),
+            "labels": (cfg or {}).get("labels", []),
+            "image_url": f"{base_url}/{img}" if img else None,
+            "pdf_url": f"{base_url}/{pdf}" if pdf else None,
+            "config_url": f"{base_url}/config.json" if os.path.exists(cfg_path) else None,
+            "zip_url": f"{base_url}/comparison_outputs.zip" if os.path.exists(os.path.join(p, "comparison_outputs.zip")) else None,
+            "n_groups": len((cfg or {}).get("groups", [])),
+        })
+    return {"items": items}
+
+
+@app.delete("/api/comparisons/{comparison_id}")
+def delete_comparison(comparison_id: str):
+    if "/" in comparison_id or ".." in comparison_id:
+        raise HTTPException(400, "Invalid")
+    p = os.path.join(COMPARISONS_DIR, comparison_id)
+    if not os.path.isdir(p):
+        raise HTTPException(404, "Not found")
+    shutil.rmtree(p, ignore_errors=True)
+    return {"ok": True}
 
 
 @app.get("/api/compare/{comparison_id}")
@@ -396,8 +444,7 @@ def get_comparison(comparison_id: str):
     pdf = next((f for f in files if f.endswith(".pdf")), None)
     base_url = f"/files/_comparisons/{comparison_id}"
     return {
-        "comparison_id": comparison_id,
-        "config": cfg,
+        "comparison_id": comparison_id, "config": cfg,
         "image_url": f"{base_url}/{img}" if img else None,
         "pdf_url": f"{base_url}/{pdf}" if pdf else None,
     }
