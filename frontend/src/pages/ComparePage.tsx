@@ -56,6 +56,12 @@ export default function ComparePage() {
   const loadCfgInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => { reloadOutputs(); }, []);
+  useEffect(() => {
+    const raw = sessionStorage.getItem("preload_comparison_config");
+    if (!raw) return;
+    sessionStorage.removeItem("preload_comparison_config");
+    try { loadConfigFile(new File([raw], "preload.json", { type: "application/json" })); } catch {}
+  }, []);
   async function reloadOutputs() {
     const r = await fetch("/api/outputs");
     const d = await r.json();
