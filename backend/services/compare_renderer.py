@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional, Tuple
+import math
 from PIL import Image, ImageDraw, ImageFont
 
 
