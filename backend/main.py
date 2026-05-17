@@ -19,7 +19,10 @@ from pydantic import BaseModel
 from services import safe_label as _safe_label, safe_video_name as _safe_vid
 from services.csv_metadata import load_csv, detect_columns, build_mapping, preview_rows, lookup_label
 from services.extract_mediapipe import ExtractConfig, extract_video
-from services.compare_renderer import LayoutSettings, render_comparison, caption_en as _cap_en, caption_vi as _cap_vi
+from services.compare_renderer import (
+    LayoutSettings, render_comparison, apply_annotations,
+    caption_en as _cap_en, caption_vi as _cap_vi,
+)
 from services.pdf_report import build_pdf
 from services.filename_parser import parse_filename
 
