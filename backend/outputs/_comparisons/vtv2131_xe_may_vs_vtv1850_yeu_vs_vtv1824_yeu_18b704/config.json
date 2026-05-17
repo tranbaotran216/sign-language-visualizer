@@ -1,0 +1,182 @@
+{
+  "comparison_id": "vtv2131_xe_may_vs_vtv1850_yeu_vs_vtv1824_yeu_18b704",
+  "labels": [
+    "VTV2131_xe_máy",
+    "VTV1850_yếu",
+    "VTV1824_yếu"
+  ],
+  "safe_labels": [
+    "vtv2131_xe_may",
+    "vtv1850_yeu",
+    "vtv1824_yeu"
+  ],
+  "caption_en": "Comparison between signs 'VTV2131_xe_máy', 'VTV1850_yếu', and 'VTV1824_yếu' using RGB and MediaPipe landmark visualization.",
+  "caption_vi": "So sánh trực quan giữa các ký hiệu ‘VTV2131_xe_máy’, ‘VTV1850_yếu’ và ‘VTV1824_yếu’ bằng ảnh RGB và landmark MediaPipe.",
+  "layout": {
+    "tile_width": 240,
+    "rgb_height": 145,
+    "pose_height": 150,
+    "cell_gap": 12,
+    "row_gap": 42,
+    "top_margin": 30,
+    "bottom_margin": 30,
+    "side_margin": 30,
+    "title_font_size": 28,
+    "frame_label_font_size": 18,
+    "background_color": "#ffffff",
+    "text_color": "#000000",
+    "include_titles": true,
+    "include_frame_labels": true
+  },
+  "groups": [
+    {
+      "video_name": "VTV2131",
+      "label": "VTV2131_xe_máy",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 18,
+          "original_frame_index": 20,
+          "rgb_path": "VTV2131_vtv2131_xe_may/frames/rgb/rgb_VTV2131_vtv2131_xe_may_018_000020.jpg",
+          "pose_path": "VTV2131_vtv2131_xe_may/frames/pose/pose_VTV2131_vtv2131_xe_may_018_000020.jpg",
+          "pair_path": "VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_018_000020.jpg",
+          "thumb": "/files/VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_018_000020.jpg"
+        },
+        {
+          "sample_index": 25,
+          "original_frame_index": 27,
+          "rgb_path": "VTV2131_vtv2131_xe_may/frames/rgb/rgb_VTV2131_vtv2131_xe_may_025_000027.jpg",
+          "pose_path": "VTV2131_vtv2131_xe_may/frames/pose/pose_VTV2131_vtv2131_xe_may_025_000027.jpg",
+          "pair_path": "VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_025_000027.jpg",
+          "thumb": "/files/VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_025_000027.jpg"
+        },
+        {
+          "sample_index": 32,
+          "original_frame_index": 35,
+          "rgb_path": "VTV2131_vtv2131_xe_may/frames/rgb/rgb_VTV2131_vtv2131_xe_may_032_000035.jpg",
+          "pose_path": "VTV2131_vtv2131_xe_may/frames/pose/pose_VTV2131_vtv2131_xe_may_032_000035.jpg",
+          "pair_path": "VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_032_000035.jpg",
+          "thumb": "/files/VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_032_000035.jpg"
+        },
+        {
+          "sample_index": 36,
+          "original_frame_index": 39,
+          "rgb_path": "VTV2131_vtv2131_xe_may/frames/rgb/rgb_VTV2131_vtv2131_xe_may_036_000039.jpg",
+          "pose_path": "VTV2131_vtv2131_xe_may/frames/pose/pose_VTV2131_vtv2131_xe_may_036_000039.jpg",
+          "pair_path": "VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_036_000039.jpg",
+          "thumb": "/files/VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_036_000039.jpg"
+        },
+        {
+          "sample_index": 47,
+          "original_frame_index": 51,
+          "rgb_path": "VTV2131_vtv2131_xe_may/frames/rgb/rgb_VTV2131_vtv2131_xe_may_047_000051.jpg",
+          "pose_path": "VTV2131_vtv2131_xe_may/frames/pose/pose_VTV2131_vtv2131_xe_may_047_000051.jpg",
+          "pair_path": "VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_047_000051.jpg",
+          "thumb": "/files/VTV2131_vtv2131_xe_may/frames/pair/pair_VTV2131_vtv2131_xe_may_047_000051.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "VTV1850",
+      "label": "VTV1850_yếu",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 3,
+          "original_frame_index": 2,
+          "rgb_path": "VTV1850_vtv1850_yeu/frames/rgb/rgb_VTV1850_vtv1850_yeu_003_000002.jpg",
+          "pose_path": "VTV1850_vtv1850_yeu/frames/pose/pose_VTV1850_vtv1850_yeu_003_000002.jpg",
+          "pair_path": "VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_003_000002.jpg",
+          "thumb": "/files/VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_003_000002.jpg"
+        },
+        {
+          "sample_index": 10,
+          "original_frame_index": 8,
+          "rgb_path": "VTV1850_vtv1850_yeu/frames/rgb/rgb_VTV1850_vtv1850_yeu_010_000008.jpg",
+          "pose_path": "VTV1850_vtv1850_yeu/frames/pose/pose_VTV1850_vtv1850_yeu_010_000008.jpg",
+          "pair_path": "VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_010_000008.jpg",
+          "thumb": "/files/VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_010_000008.jpg"
+        },
+        {
+          "sample_index": 16,
+          "original_frame_index": 13,
+          "rgb_path": "VTV1850_vtv1850_yeu/frames/rgb/rgb_VTV1850_vtv1850_yeu_016_000013.jpg",
+          "pose_path": "VTV1850_vtv1850_yeu/frames/pose/pose_VTV1850_vtv1850_yeu_016_000013.jpg",
+          "pair_path": "VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_016_000013.jpg",
+          "thumb": "/files/VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_016_000013.jpg"
+        },
+        {
+          "sample_index": 26,
+          "original_frame_index": 21,
+          "rgb_path": "VTV1850_vtv1850_yeu/frames/rgb/rgb_VTV1850_vtv1850_yeu_026_000021.jpg",
+          "pose_path": "VTV1850_vtv1850_yeu/frames/pose/pose_VTV1850_vtv1850_yeu_026_000021.jpg",
+          "pair_path": "VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_026_000021.jpg",
+          "thumb": "/files/VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_026_000021.jpg"
+        },
+        {
+          "sample_index": 32,
+          "original_frame_index": 26,
+          "rgb_path": "VTV1850_vtv1850_yeu/frames/rgb/rgb_VTV1850_vtv1850_yeu_032_000026.jpg",
+          "pose_path": "VTV1850_vtv1850_yeu/frames/pose/pose_VTV1850_vtv1850_yeu_032_000026.jpg",
+          "pair_path": "VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_032_000026.jpg",
+          "thumb": "/files/VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_032_000026.jpg"
+        },
+        {
+          "sample_index": 47,
+          "original_frame_index": 39,
+          "rgb_path": "VTV1850_vtv1850_yeu/frames/rgb/rgb_VTV1850_vtv1850_yeu_047_000039.jpg",
+          "pose_path": "VTV1850_vtv1850_yeu/frames/pose/pose_VTV1850_vtv1850_yeu_047_000039.jpg",
+          "pair_path": "VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_047_000039.jpg",
+          "thumb": "/files/VTV1850_vtv1850_yeu/frames/pair/pair_VTV1850_vtv1850_yeu_047_000039.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "VTV1824",
+      "label": "VTV1824_yếu",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 3,
+          "original_frame_index": 4,
+          "rgb_path": "VTV1824_vtv1824_yeu/frames/rgb/rgb_VTV1824_vtv1824_yeu_003_000004.jpg",
+          "pose_path": "VTV1824_vtv1824_yeu/frames/pose/pose_VTV1824_vtv1824_yeu_003_000004.jpg",
+          "pair_path": "VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_003_000004.jpg",
+          "thumb": "/files/VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_003_000004.jpg"
+        },
+        {
+          "sample_index": 16,
+          "original_frame_index": 21,
+          "rgb_path": "VTV1824_vtv1824_yeu/frames/rgb/rgb_VTV1824_vtv1824_yeu_016_000021.jpg",
+          "pose_path": "VTV1824_vtv1824_yeu/frames/pose/pose_VTV1824_vtv1824_yeu_016_000021.jpg",
+          "pair_path": "VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_016_000021.jpg",
+          "thumb": "/files/VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_016_000021.jpg"
+        },
+        {
+          "sample_index": 32,
+          "original_frame_index": 43,
+          "rgb_path": "VTV1824_vtv1824_yeu/frames/rgb/rgb_VTV1824_vtv1824_yeu_032_000043.jpg",
+          "pose_path": "VTV1824_vtv1824_yeu/frames/pose/pose_VTV1824_vtv1824_yeu_032_000043.jpg",
+          "pair_path": "VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_032_000043.jpg",
+          "thumb": "/files/VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_032_000043.jpg"
+        },
+        {
+          "sample_index": 47,
+          "original_frame_index": 63,
+          "rgb_path": "VTV1824_vtv1824_yeu/frames/rgb/rgb_VTV1824_vtv1824_yeu_047_000063.jpg",
+          "pose_path": "VTV1824_vtv1824_yeu/frames/pose/pose_VTV1824_vtv1824_yeu_047_000063.jpg",
+          "pair_path": "VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_047_000063.jpg",
+          "thumb": "/files/VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_047_000063.jpg"
+        },
+        {
+          "sample_index": 63,
+          "original_frame_index": 84,
+          "rgb_path": "VTV1824_vtv1824_yeu/frames/rgb/rgb_VTV1824_vtv1824_yeu_063_000084.jpg",
+          "pose_path": "VTV1824_vtv1824_yeu/frames/pose/pose_VTV1824_vtv1824_yeu_063_000084.jpg",
+          "pair_path": "VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_063_000084.jpg",
+          "thumb": "/files/VTV1824_vtv1824_yeu/frames/pair/pair_VTV1824_vtv1824_yeu_063_000084.jpg"
+        }
+      ]
+    }
+  ]
+}

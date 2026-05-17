@@ -1,0 +1,174 @@
+{
+  "comparison_id": "con_nuoi_vs_ao_vs_ao_137195",
+  "labels": [
+    "con_nuôi",
+    "ao",
+    "ao"
+  ],
+  "safe_labels": [
+    "con_nuoi",
+    "ao",
+    "ao"
+  ],
+  "caption_en": "Comparison between signs 'con_nuôi', 'ao', and 'ao' using RGB and MediaPipe landmark visualization.",
+  "caption_vi": "So sánh trực quan giữa các ký hiệu ‘con_nuôi’, ‘ao’ và ‘ao’ bằng ảnh RGB và landmark MediaPipe.",
+  "layout": {
+    "tile_width": 240,
+    "rgb_height": 145,
+    "pose_height": 150,
+    "cell_gap": 12,
+    "row_gap": 42,
+    "top_margin": 30,
+    "bottom_margin": 30,
+    "side_margin": 30,
+    "title_font_size": 28,
+    "frame_label_font_size": 18,
+    "background_color": "#ffffff",
+    "text_color": "#000000",
+    "include_titles": true,
+    "include_frame_labels": true
+  },
+  "groups": [
+    {
+      "video_name": "A0305",
+      "label": "con_nuôi",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 0,
+          "original_frame_index": 0,
+          "rgb_path": "A0305_a0305/frames/rgb/rgb_A0305_a0305_000_000000.jpg",
+          "pose_path": "A0305_a0305/frames/pose/pose_A0305_a0305_000_000000.jpg",
+          "pair_path": "A0305_a0305/frames/pair/pair_A0305_a0305_000_000000.jpg",
+          "thumb": "/files/A0305_a0305/frames/pair/pair_A0305_a0305_000_000000.jpg"
+        },
+        {
+          "sample_index": 11,
+          "original_frame_index": 19,
+          "rgb_path": "A0305_a0305/frames/rgb/rgb_A0305_a0305_011_000019.jpg",
+          "pose_path": "A0305_a0305/frames/pose/pose_A0305_a0305_011_000019.jpg",
+          "pair_path": "A0305_a0305/frames/pair/pair_A0305_a0305_011_000019.jpg",
+          "thumb": "/files/A0305_a0305/frames/pair/pair_A0305_a0305_011_000019.jpg"
+        },
+        {
+          "sample_index": 32,
+          "original_frame_index": 55,
+          "rgb_path": "A0305_a0305/frames/rgb/rgb_A0305_a0305_032_000055.jpg",
+          "pose_path": "A0305_a0305/frames/pose/pose_A0305_a0305_032_000055.jpg",
+          "pair_path": "A0305_a0305/frames/pair/pair_A0305_a0305_032_000055.jpg",
+          "thumb": "/files/A0305_a0305/frames/pair/pair_A0305_a0305_032_000055.jpg"
+        },
+        {
+          "sample_index": 47,
+          "original_frame_index": 81,
+          "rgb_path": "A0305_a0305/frames/rgb/rgb_A0305_a0305_047_000081.jpg",
+          "pose_path": "A0305_a0305/frames/pose/pose_A0305_a0305_047_000081.jpg",
+          "pair_path": "A0305_a0305/frames/pair/pair_A0305_a0305_047_000081.jpg",
+          "thumb": "/files/A0305_a0305/frames/pair/pair_A0305_a0305_047_000081.jpg"
+        },
+        {
+          "sample_index": 63,
+          "original_frame_index": 108,
+          "rgb_path": "A0305_a0305/frames/rgb/rgb_A0305_a0305_063_000108.jpg",
+          "pose_path": "A0305_a0305/frames/pose/pose_A0305_a0305_063_000108.jpg",
+          "pair_path": "A0305_a0305/frames/pair/pair_A0305_a0305_063_000108.jpg",
+          "thumb": "/files/A0305_a0305/frames/pair/pair_A0305_a0305_063_000108.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "VTV2605",
+      "label": "ao",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 0,
+          "original_frame_index": 0,
+          "rgb_path": "VTV2605_vtv2605/frames/rgb/rgb_VTV2605_vtv2605_000_000000.jpg",
+          "pose_path": "VTV2605_vtv2605/frames/pose/pose_VTV2605_vtv2605_000_000000.jpg",
+          "pair_path": "VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_000_000000.jpg",
+          "thumb": "/files/VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_000_000000.jpg"
+        },
+        {
+          "sample_index": 16,
+          "original_frame_index": 26,
+          "rgb_path": "VTV2605_vtv2605/frames/rgb/rgb_VTV2605_vtv2605_016_000026.jpg",
+          "pose_path": "VTV2605_vtv2605/frames/pose/pose_VTV2605_vtv2605_016_000026.jpg",
+          "pair_path": "VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_016_000026.jpg",
+          "thumb": "/files/VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_016_000026.jpg"
+        },
+        {
+          "sample_index": 32,
+          "original_frame_index": 53,
+          "rgb_path": "VTV2605_vtv2605/frames/rgb/rgb_VTV2605_vtv2605_032_000053.jpg",
+          "pose_path": "VTV2605_vtv2605/frames/pose/pose_VTV2605_vtv2605_032_000053.jpg",
+          "pair_path": "VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_032_000053.jpg",
+          "thumb": "/files/VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_032_000053.jpg"
+        },
+        {
+          "sample_index": 47,
+          "original_frame_index": 78,
+          "rgb_path": "VTV2605_vtv2605/frames/rgb/rgb_VTV2605_vtv2605_047_000078.jpg",
+          "pose_path": "VTV2605_vtv2605/frames/pose/pose_VTV2605_vtv2605_047_000078.jpg",
+          "pair_path": "VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_047_000078.jpg",
+          "thumb": "/files/VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_047_000078.jpg"
+        },
+        {
+          "sample_index": 63,
+          "original_frame_index": 104,
+          "rgb_path": "VTV2605_vtv2605/frames/rgb/rgb_VTV2605_vtv2605_063_000104.jpg",
+          "pose_path": "VTV2605_vtv2605/frames/pose/pose_VTV2605_vtv2605_063_000104.jpg",
+          "pair_path": "VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_063_000104.jpg",
+          "thumb": "/files/VTV2605_vtv2605/frames/pair/pair_VTV2605_vtv2605_063_000104.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "VTV2652",
+      "label": "ao",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 0,
+          "original_frame_index": 0,
+          "rgb_path": "VTV2652_vtv2652/frames/rgb/rgb_VTV2652_vtv2652_000_000000.jpg",
+          "pose_path": "VTV2652_vtv2652/frames/pose/pose_VTV2652_vtv2652_000_000000.jpg",
+          "pair_path": "VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_000_000000.jpg",
+          "thumb": "/files/VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_000_000000.jpg"
+        },
+        {
+          "sample_index": 16,
+          "original_frame_index": 22,
+          "rgb_path": "VTV2652_vtv2652/frames/rgb/rgb_VTV2652_vtv2652_016_000022.jpg",
+          "pose_path": "VTV2652_vtv2652/frames/pose/pose_VTV2652_vtv2652_016_000022.jpg",
+          "pair_path": "VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_016_000022.jpg",
+          "thumb": "/files/VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_016_000022.jpg"
+        },
+        {
+          "sample_index": 32,
+          "original_frame_index": 44,
+          "rgb_path": "VTV2652_vtv2652/frames/rgb/rgb_VTV2652_vtv2652_032_000044.jpg",
+          "pose_path": "VTV2652_vtv2652/frames/pose/pose_VTV2652_vtv2652_032_000044.jpg",
+          "pair_path": "VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_032_000044.jpg",
+          "thumb": "/files/VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_032_000044.jpg"
+        },
+        {
+          "sample_index": 47,
+          "original_frame_index": 65,
+          "rgb_path": "VTV2652_vtv2652/frames/rgb/rgb_VTV2652_vtv2652_047_000065.jpg",
+          "pose_path": "VTV2652_vtv2652/frames/pose/pose_VTV2652_vtv2652_047_000065.jpg",
+          "pair_path": "VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_047_000065.jpg",
+          "thumb": "/files/VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_047_000065.jpg"
+        },
+        {
+          "sample_index": 63,
+          "original_frame_index": 87,
+          "rgb_path": "VTV2652_vtv2652/frames/rgb/rgb_VTV2652_vtv2652_063_000087.jpg",
+          "pose_path": "VTV2652_vtv2652/frames/pose/pose_VTV2652_vtv2652_063_000087.jpg",
+          "pair_path": "VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_063_000087.jpg",
+          "thumb": "/files/VTV2652_vtv2652/frames/pair/pair_VTV2652_vtv2652_063_000087.jpg"
+        }
+      ]
+    }
+  ]
+}
