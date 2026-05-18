@@ -200,7 +200,9 @@ function Field({ label, children }: any) {
 function JobCard({ j }: { j: any }) {
   const m = j.manifest;
   const qs = j.quality_report_summary || {};
-  const fileUrl = (rel: string) => `/files/${j.project_dir}/${rel}`;
+  const frames: any[] = m?.quality_frames || m?.frames || [];
+  const T = qs.timesteps || frames.length || 0;
+  const fileUrl = (rel: string) => `/files/${j.project_dir}/${rel}?t=${j.job_id}`;
   return (
     <div className="card">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -233,11 +235,20 @@ function JobCard({ j }: { j: any }) {
               <dt className="text-gray-500">NPZ shape</dt><dd>{JSON.stringify(m.npz_shape)}</dd>
               <dt className="text-gray-500">Folder</dt><dd className="font-mono text-xs">{m.project_dir}</dd>
             </dl>
+            <p className="text-[11px] text-gray-500 mt-2 italic">
+              LH/RH được tính theo quy ước anatomical left/right của MediaPipe, không phải trái/phải theo màn hình.
+            </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
+              <D label="Pose detected" n={qs.pose_detected_count} T={T} />
+              <D label="LH detected" n={qs.left_hand_detected_count} T={T} />
+              <D label="RH detected" n={qs.right_hand_detected_count} T={T} />
+              <D label="All-zero" n={qs.all_zero_count} T={T} danger />
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
               <Q label="Pose missing" v={qs.pose_missing_rate} />
               <Q label="LH missing" v={qs.left_hand_missing_rate} />
               <Q label="RH missing" v={qs.right_hand_missing_rate} />
-              <Q label="All-zero" v={qs.all_zero_rate} />
+              <Q label="All-zero rate" v={qs.all_zero_rate} />
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
               {Object.entries(j.output_urls || {}).map(([k, u]) => (
@@ -247,6 +258,71 @@ function JobCard({ j }: { j: any }) {
           </div>
         </div>
       )}
+
+      {frames.length > 0 && (
+        <details className="mt-4">
+          <summary className="cursor-pointer text-sm font-semibold text-gray-700">
+            Chi tiết detection theo frame ({frames.length})
+          </summary>
+          <div className="mt-2 overflow-x-auto">
+            <table className="text-xs w-full border">
+              <thead className="bg-gray-100 text-left">
+                <tr>
+                  <th className="px-2 py-1">#</th>
+                  <th className="px-2 py-1">orig_idx</th>
+                  <th className="px-2 py-1">pose</th>
+                  <th className="px-2 py-1">LH</th>
+                  <th className="px-2 py-1">RH</th>
+                  <th className="px-2 py-1">all-zero</th>
+                  <th className="px-2 py-1">files</th>
+                </tr>
+              </thead>
+              <tbody>
+                {frames.map((f: any) => (
+                  <tr key={f.sample_index} className="border-t">
+                    <td className="px-2 py-1">{f.sample_index}</td>
+                    <td className="px-2 py-1">{f.original_frame_index}</td>
+                    <td className="px-2 py-1"><Badge ok={f.has_pose} /></td>
+                    <td className="px-2 py-1"><Badge ok={f.has_left_hand} /></td>
+                    <td className="px-2 py-1"><Badge ok={f.has_right_hand} /></td>
+                    <td className="px-2 py-1">{f.is_all_zero
+                      ? <span className="chip bg-red-100 text-red-700">yes</span>
+                      : <span className="chip bg-gray-100 text-gray-600">no</span>}</td>
+                    <td className="px-2 py-1 font-mono text-[10px] text-gray-500 truncate max-w-[280px]">{f.pair_file}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
+    </div>
+  );
+}
+
+function Badge({ ok }: { ok: boolean }) {
+  return ok
+    ? <span className="chip bg-green-100 text-green-700">Detected</span>
+    : <span className="chip bg-red-100 text-red-700">Missing</span>;
+}
+
+function D({ label, n, T, danger }: { label: string; n?: number; T: number; danger?: boolean }) {
+  const has = n != null && T > 0;
+  return (
+    <div className={`rounded-md px-3 py-2 border text-xs ${danger && (n || 0) > 0 ? "bg-red-50 border-red-200" : "bg-gray-50 border-gray-200"}`}>
+      <div className="text-gray-500">{label}</div>
+      <div className="font-semibold">{has ? `${n} / ${T}` : "—"}</div>
+    </div>
+  );
+}
+
+function Q({ label, v }: { label: string; v?: number }) {
+  const pct = ((v ?? 0) * 100);
+  const warn = pct > 30;
+  return (
+    <div className={`rounded-md px-3 py-2 border text-xs ${warn ? "bg-amber-50 border-amber-200" : "bg-gray-50 border-gray-200"}`}>
+      <div className="text-gray-500">{label}</div>
+      <div className="font-semibold">{pct.toFixed(1)}%</div>
     </div>
   );
 }
