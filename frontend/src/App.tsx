@@ -5,6 +5,8 @@ import MetadataPage from "./pages/MetadataPage";
 import ExtractPage from "./pages/ExtractPage";
 import ComparePage from "./pages/ComparePage";
 import HistoryPage from "./pages/HistoryPage";
+import DatasetQAPage from "./pages/DatasetQAPage";
+import ModelResultsPage from "./pages/ModelResultsPage";
 
 export default function App() {
   return (
@@ -15,6 +17,8 @@ export default function App() {
         <Route path="/extract" element={<ExtractPage />} />
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path="/dataset-qa" element={<DatasetQAPage />} />
+        <Route path="/model-results" element={<ModelResultsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

@@ -394,24 +394,47 @@ def extract_video(
             original_filename=os.path.basename(video_path),
         )
 
-    # quality report
-    pose_missing = sum(1 for r in frame_records if not r["has_pose"])
-    lh_missing = sum(1 for r in frame_records if not r["has_left_hand"])
-    rh_missing = sum(1 for r in frame_records if not r["has_right_hand"])
+    # ---- Quality report.
+    # NOTE on LH/RH: `left_hand_landmarks` / `right_hand_landmarks` are the
+    # signer's anatomical left/right hand as labelled by MediaPipe Holistic,
+    # NOT the left/right side of the image. `has_left_hand` is True iff
+    # MediaPipe returned non-None left_hand_landmarks AND the extracted
+    # 21-landmark vector contains any non-zero coordinate. The same `results`
+    # object is used for both drawing pose images and the report, so the
+    # report cannot disagree with what is drawn.
+    pose_det = sum(1 for r in frame_records if r["has_pose"])
+    lh_det = sum(1 for r in frame_records if r["has_left_hand"])
+    rh_det = sum(1 for r in frame_records if r["has_right_hand"])
+    pose_missing = len(frame_records) - pose_det
+    lh_missing = len(frame_records) - lh_det
+    rh_missing = len(frame_records) - rh_det
     zero_cnt = sum(1 for r in frame_records if r["is_all_zero"])
     T = max(1, len(frame_records))
     quality = {
         "total_original_frames": total,
         "timesteps": config.timesteps,
         "sampled_frame_indices": sampled,
+        "pose_detected_count": pose_det,
+        "left_hand_detected_count": lh_det,
+        "right_hand_detected_count": rh_det,
+        "pose_missing_count": pose_missing,
+        "left_hand_missing_count": lh_missing,
+        "right_hand_missing_count": rh_missing,
+        "all_zero_count": zero_cnt,
+        # legacy keys (kept for backward compatibility)
         "pose_missing": pose_missing,
         "left_hand_missing": lh_missing,
         "right_hand_missing": rh_missing,
         "all_zero": zero_cnt,
+        "pose_detected_rate": pose_det / T,
+        "left_hand_detected_rate": lh_det / T,
+        "right_hand_detected_rate": rh_det / T,
         "pose_missing_rate": pose_missing / T,
         "left_hand_missing_rate": lh_missing / T,
         "right_hand_missing_rate": rh_missing / T,
         "all_zero_rate": zero_cnt / T,
+        "frames": frame_records,
+        # legacy
         "per_frame": frame_records,
     }
     qr_json_rel = f"reports/quality_report_{safe_vid}_{safe_lbl}.json"
@@ -459,8 +482,14 @@ def extract_video(
     manifest["project_dir"] = f"{safe_vid}_{safe_lbl}"
     manifest["quality_summary"] = {
         k: quality[k] for k in (
+            "timesteps",
+            "pose_detected_count", "left_hand_detected_count", "right_hand_detected_count",
+            "pose_missing_count", "left_hand_missing_count", "right_hand_missing_count",
+            "all_zero_count",
             "pose_missing_rate", "left_hand_missing_rate",
             "right_hand_missing_rate", "all_zero_rate",
+            "pose_detected_rate", "left_hand_detected_rate", "right_hand_detected_rate",
         )
     }
+    manifest["quality_frames"] = frame_records
     return manifest

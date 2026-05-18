@@ -85,7 +85,13 @@ Mặc định mở tại <http://localhost:5173>. Frontend đã được cấu h
 - **Phase 1** ✅ — CSV metadata, batch upload tới 5 video, trích xuất MediaPipe Holistic (13 pose + 21 + 21 hands, dim = 110), output RGB / pose / pair / NPZ / grid / pose MP4 / pair MP4 / manifest / quality report / ZIP.
 - **Phase 2** ✅ — So sánh 2–5 video (chọn từ extraction result hoặc upload thủ công), parse tên file, render ảnh so sánh JPG/PNG, PDF report đầy đủ metadata + quality report, auto caption EN + VI.
 - **Phase 3** ✅ — Editor đơn giản (reorder / remove / annotation).
-- **Phase 4** ✅ — Output history manager nâng cao + reload config.
+- **Phase 4** ✅ — Output history manager nâng cao + reload config + nút "Xoá toàn bộ lịch sử" (`DELETE /api/history/all`).
+- **Phase 5** ✅ — Trang **Phân tích chất lượng dataset** (`/dataset-qa`): quét toàn bộ outputs, dashboard cards (avg pose / LH / RH / all-zero missing), bảng filter theo Good / Warning / Bad / Critical, top 10 worst videos, export CSV + PDF.
+- **Phase 6** ✅ — Trang **Visualize kết quả model** (`/model-results`): import prediction CSV, auto-detect + manual column mapping, ghép prediction row với extraction folder, tabs Correct/Wrong/Low-conf/High-conf-wrong + RGB/Pose/Fusion wins (khi có nhiều modality), modal chi tiết và nút **Tạo ảnh phân tích lỗi** dùng lại comparison renderer.
+
+### Ghi chú quan trọng về LH / RH
+
+`LH` = left hand, `RH` = right hand. MediaPipe label `left_hand_landmarks` / `right_hand_landmarks` theo **anatomical** của signer, không theo trái/phải trên màn hình. Trang `/extract` có bảng debug "Chi tiết detection theo frame" để đối chiếu trực tiếp với ảnh pose đã vẽ.
 
 ---
 

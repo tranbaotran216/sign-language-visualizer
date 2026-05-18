@@ -4,7 +4,9 @@ const cards = [
   { to: "/extract", title: "Trích xuất MediaPipe từ video", desc: "Batch tới 5 video, sinh RGB/pose/pair frames, NPZ, grid, MP4, manifest và quality report.", icon: "🎬" },
   { to: "/compare", title: "So sánh frames đã trích xuất", desc: "Tạo ảnh so sánh 2–5 video. Mỗi video một dòng, mỗi cột là một frame. Xuất ảnh + PDF.", icon: "🔬" },
   { to: "/metadata", title: "Quản lý metadata CSV", desc: "Nhập file như ISLR_promax.csv với cột ID_video và Meaning để auto-fill ground truth.", icon: "📄" },
-  { to: "/history", title: "Lịch sử outputs local", desc: "Duyệt lại các project đã trích xuất, tải ZIP, hoặc xoá folder local.", icon: "🗂️" },
+  { to: "/history", title: "Lịch sử outputs local", desc: "Duyệt extraction và comparison đã tạo, tải ZIP, hoặc xoá toàn bộ lịch sử local.", icon: "🗂️" },
+  { to: "/dataset-qa", title: "Phân tích chất lượng dataset", desc: "Phase 5: tổng hợp quality report toàn dataset, tìm video kém chất lượng, export CSV/PDF.", icon: "📊" },
+  { to: "/model-results", title: "Visualize kết quả model", desc: "Phase 6: import prediction CSV, ghép với visualization, sinh ảnh phân tích lỗi.", icon: "🤖" },
 ];
 
 export default function Dashboard() {
@@ -36,6 +38,8 @@ export default function Dashboard() {
           <li>Tải file CSV metadata (vd <code className="bg-gray-100 px-1 rounded">ISLR_promax.csv</code>) ở trang <strong>Metadata CSV</strong>.</li>
           <li>Sang trang <strong>Trích xuất MediaPipe</strong>, upload 1–5 video, kiểm tra label, bấm <strong>Bắt đầu trích xuất</strong>.</li>
           <li>Khi xong, sang <strong>So sánh frames</strong> để chọn các frame và tạo ảnh + PDF so sánh.</li>
+          <li>Vào <strong>Phân tích chất lượng dataset</strong> để xem chất lượng MediaPipe toàn dataset.</li>
+          <li>Vào <strong>Visualize kết quả model</strong> để import prediction CSV và phân tích lỗi.</li>
         </ol>
       </section>
     </div>

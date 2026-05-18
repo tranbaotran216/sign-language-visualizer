@@ -5,6 +5,14 @@ export default function HistoryPage() {
   const [items, setItems] = useState<any[]>([]);
   const [comps, setComps] = useState<any[]>([]);
   const [q, setQ] = useState("");
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [toast, setToast] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
+
+  function showToast(kind: "ok" | "err", msg: string) {
+    setToast({ kind, msg });
+    setTimeout(() => setToast(null), 3500);
+  }
 
   async function reload() {
     const [r1, r2] = await Promise.all([fetch("/api/outputs"), fetch("/api/comparisons")]);
@@ -22,6 +30,20 @@ export default function HistoryPage() {
     if (!confirm(`Xoá comparison ${id}?`)) return;
     await fetch(`/api/comparisons/${encodeURIComponent(id)}`, { method: "DELETE" });
     reload();
+  }
+
+  async function deleteAll() {
+    setBusy(true);
+    try {
+      const r = await fetch("/api/history/all", { method: "DELETE" });
+      if (!r.ok) throw new Error(await r.text());
+      const d = await r.json();
+      showToast("ok", `Đã xoá toàn bộ lịch sử outputs. (${d.deleted_count} mục)`);
+      setConfirming(false);
+      await reload();
+    } catch (e: any) {
+      showToast("err", "Không thể xoá lịch sử outputs.");
+    } finally { setBusy(false); }
   }
 
   async function reloadConfig(url: string) {
@@ -53,7 +75,21 @@ export default function HistoryPage() {
         </div>
         <input className="input max-w-sm" placeholder="Tìm theo tên / label" value={q} onChange={e => setQ(e.target.value)} />
         <button className="btn-ghost" onClick={reload}>↻ Reload</button>
+        <button
+          className="btn inline-flex items-center gap-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+          onClick={() => setConfirming(true)}
+          disabled={busy || (items.length === 0 && comps.length === 0)}
+          title="Xoá toàn bộ outputs trong thư mục local"
+        >
+          🗑️ Xoá toàn bộ lịch sử
+        </button>
       </div>
+
+      {toast && (
+        <div className={`mt-3 text-sm px-3 py-2 rounded-md ${toast.kind === "ok" ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
+          {toast.msg}
+        </div>
+      )}
 
       {tab === "extractions" ? (
         <div className="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -90,6 +126,26 @@ export default function HistoryPage() {
             </div>
           ))}
           {filteredComps.length === 0 && <div className="text-sm text-gray-500">Chưa có comparison.</div>}
+        </div>
+      )}
+
+      {/* Confirmation dialog */}
+      {confirming && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4" onClick={() => !busy && setConfirming(false)}>
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl" onClick={e => e.stopPropagation()}>
+            <h2 className="text-lg font-bold text-red-700">Xoá toàn bộ lịch sử outputs local?</h2>
+            <p className="text-sm text-gray-700 mt-3">
+              Hành động này sẽ xoá toàn bộ outputs đã tạo trong thư mục local, bao gồm kết quả extract và comparison.
+              Hành động này không thể hoàn tác.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button className="btn-ghost" onClick={() => setConfirming(false)} disabled={busy}>Huỷ</button>
+              <button
+                className="btn bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                onClick={deleteAll} disabled={busy}
+              >{busy ? "Đang xoá…" : "Xoá tất cả"}</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

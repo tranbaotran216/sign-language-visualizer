@@ -1,11 +1,13 @@
 import { NavLink, Outlet } from "react-router-dom";
 
 const nav = [
-  { to: "/", label: "Dashboard", icon: "🏠" },
+  { to: "/", label: "Trang chủ", icon: "🏠" },
   { to: "/metadata", label: "Metadata CSV", icon: "📄" },
   { to: "/extract", label: "Trích xuất MediaPipe", icon: "🎬" },
   { to: "/compare", label: "So sánh frames", icon: "🔬" },
   { to: "/history", label: "Lịch sử outputs", icon: "🗂️" },
+  { to: "/dataset-qa", label: "Phân tích chất lượng dataset", icon: "📊" },
+  { to: "/model-results", label: "Visualize kết quả model", icon: "🤖" },
 ];
 
 export default function AppLayout() {
