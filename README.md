@@ -68,7 +68,7 @@ API docs tự động tại: <http://127.0.0.1:8000/docs>
 ---
 
 ## 3. Chạy Frontend (React + Vite)
-để chạy được "npm" cần install (nodejs)[https://nodejs.org/en] 
+để chạy được "npm" cần install [nodejs](https://nodejs.org/en)
 
 ```bash
 cd frontend
