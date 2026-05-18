@@ -25,6 +25,8 @@ from services.compare_renderer import (
 )
 from services.pdf_report import build_pdf
 from services.filename_parser import parse_filename
+from services import dataset_qa as dsqa
+from services import model_results as mres
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
@@ -473,3 +475,226 @@ async def compare_upload_frames(files: List[UploadFile] = File(...)):
 @app.get("/")
 def root():
     return {"app": "KLTN VSL Visualization Tool", "docs": "/docs"}
+
+
+# ================================================================ DELETE ALL HISTORY (Task A)
+@app.delete("/api/history/all")
+def delete_all_history():
+    """Safely wipe all generated outputs inside backend/outputs/.
+
+    Only removes directories whose resolved absolute path lives strictly
+    inside OUTPUTS_DIR. Does not touch source code, env files, uploads,
+    or anything outside backend/outputs.
+    """
+    outputs_abs = os.path.realpath(OUTPUTS_DIR)
+    deleted = 0
+    errors: List[str] = []
+    if not os.path.isdir(outputs_abs):
+        return {"success": True, "deleted_count": 0, "message": "Outputs folder is empty."}
+
+    for name in os.listdir(outputs_abs):
+        target = os.path.join(outputs_abs, name)
+        try:
+            real = os.path.realpath(target)
+            # safety: must remain inside outputs_abs
+            if not real.startswith(outputs_abs + os.sep) and real != outputs_abs:
+                errors.append(f"skip unsafe: {name}")
+                continue
+            if real == outputs_abs:
+                continue
+            if os.path.isdir(real):
+                shutil.rmtree(real, ignore_errors=True)
+            else:
+                os.remove(real)
+            deleted += 1
+        except Exception as e:
+            errors.append(f"{name}: {e}")
+
+    # recreate the conventional sub-folder for next comparisons
+    os.makedirs(COMPARISONS_DIR, exist_ok=True)
+    return {
+        "success": True,
+        "deleted_count": deleted,
+        "errors": errors,
+        "message": "Deleted all local history outputs.",
+    }
+
+
+# ================================================================ DATASET QA (Phase 5)
+@app.get("/api/dataset-qa/summary")
+def dataset_qa_summary():
+    return dsqa.scan_dataset(OUTPUTS_DIR)
+
+
+@app.get("/api/dataset-qa/video/{project_dir}")
+def dataset_qa_video(project_dir: str):
+    if "/" in project_dir or ".." in project_dir:
+        raise HTTPException(400, "Invalid path")
+    detail = dsqa.video_detail(OUTPUTS_DIR, project_dir)
+    if not detail:
+        raise HTTPException(404, "Not found")
+    return detail
+
+
+@app.get("/api/dataset-qa/export/csv")
+def dataset_qa_export_csv():
+    data = dsqa.scan_dataset(OUTPUTS_DIR)
+    csv_bytes = dsqa.export_csv(data["rows"])
+    path = os.path.join(OUTPUTS_DIR, "_qa_dataset_quality_summary.csv")
+    with open(path, "wb") as f:
+        f.write(csv_bytes)
+    return FileResponse(path, media_type="text/csv", filename="dataset_quality_summary.csv")
+
+
+@app.get("/api/dataset-qa/export/pdf")
+def dataset_qa_export_pdf():
+    """Minimal PDF report listing summary + per-video rates."""
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import cm
+    from reportlab.lib import colors as _c
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet
+
+    data = dsqa.scan_dataset(OUTPUTS_DIR)
+    s = data["summary"]
+    path = os.path.join(OUTPUTS_DIR, "_qa_dataset_quality_report.pdf")
+    doc = SimpleDocTemplate(path, pagesize=A4, leftMargin=1.5 * cm, rightMargin=1.5 * cm,
+                            topMargin=1.5 * cm, bottomMargin=1.5 * cm)
+    styles = getSampleStyleSheet()
+    story = [Paragraph("Dataset Quality Report", styles["Title"]), Spacer(1, 10)]
+    rows = [[k, str(v)] for k, v in s.items()]
+    t = Table(rows, colWidths=[7 * cm, 9 * cm])
+    t.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.5, _c.grey),
+                            ("INNERGRID", (0, 0), (-1, -1), 0.25, _c.lightgrey),
+                            ("FONTSIZE", (0, 0), (-1, -1), 9)]))
+    story += [t, Spacer(1, 14), Paragraph("Per-video quality", styles["Heading2"])]
+    header = ["video_name", "label", "pose%", "LH%", "RH%", "zero%", "status"]
+    body = [header]
+    for r in data["rows"]:
+        body.append([
+            r.get("video_name"), r.get("label"),
+            f"{(r.get('pose_missing_rate') or 0) * 100:.1f}",
+            f"{(r.get('left_hand_missing_rate') or 0) * 100:.1f}",
+            f"{(r.get('right_hand_missing_rate') or 0) * 100:.1f}",
+            f"{(r.get('all_zero_rate') or 0) * 100:.1f}",
+            r.get("quality_status"),
+        ])
+    t2 = Table(body, repeatRows=1, colWidths=[4 * cm, 4 * cm, 1.5 * cm, 1.5 * cm, 1.5 * cm, 1.5 * cm, 2 * cm])
+    t2.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), 7),
+                             ("BOX", (0, 0), (-1, -1), 0.5, _c.grey),
+                             ("INNERGRID", (0, 0), (-1, -1), 0.25, _c.lightgrey),
+                             ("BACKGROUND", (0, 0), (-1, 0), _c.lightgrey)]))
+    story.append(t2)
+    doc.build(story)
+    return FileResponse(path, media_type="application/pdf", filename="dataset_quality_report.pdf")
+
+
+# ================================================================ MODEL RESULTS (Phase 6)
+@app.post("/api/model-results/import")
+async def model_results_import(csv_file: UploadFile = File(...)):
+    raw = await csv_file.read()
+    try:
+        return mres.import_csv(raw, csv_file.filename or "predictions.csv")
+    except Exception as e:
+        raise HTTPException(400, f"Không đọc được CSV: {e}")
+
+
+@app.post("/api/model-results/{ds_id}/map-columns")
+def model_results_map(ds_id: str, payload: Dict = Body(...)):
+    try:
+        return mres.apply_mapping(ds_id, payload.get("mapping", {}), OUTPUTS_DIR)
+    except KeyError:
+        raise HTTPException(404, "Dataset not found")
+
+
+@app.get("/api/model-results/{ds_id}/summary")
+def model_results_summary(ds_id: str):
+    if not mres.get_dataset(ds_id):
+        raise HTTPException(404, "Dataset not found")
+    return mres.summary(ds_id)
+
+
+@app.get("/api/model-results/{ds_id}/rows")
+def model_results_rows(ds_id: str, filter: str = "all", q: str = ""):
+    if not mres.get_dataset(ds_id):
+        raise HTTPException(404, "Dataset not found")
+    return {"rows": mres.filter_rows(ds_id, filter, q)}
+
+
+@app.get("/api/model-results/{ds_id}/class-report")
+def model_results_class_report(ds_id: str):
+    if not mres.get_dataset(ds_id):
+        raise HTTPException(404, "Dataset not found")
+    return mres.class_report(ds_id)
+
+
+@app.get("/api/model-results/{ds_id}/export/csv")
+def model_results_export_csv(ds_id: str, filter: str = "all"):
+    if not mres.get_dataset(ds_id):
+        raise HTTPException(404, "Dataset not found")
+    data = mres.export_csv(ds_id, filter)
+    path = os.path.join(OUTPUTS_DIR, f"_predictions_{ds_id[:8]}_{filter}.csv")
+    with open(path, "wb") as f:
+        f.write(data)
+    return FileResponse(path, media_type="text/csv", filename=f"predictions_{filter}.csv")
+
+
+@app.post("/api/model-results/{ds_id}/generate-error-analysis")
+def model_results_error_analysis(ds_id: str, payload: Dict = Body(...)):
+    """Use comparison renderer to generate an error-analysis figure for a wrong prediction.
+
+    payload: { row_id: int, gt_project_dir?: str, pred_project_dir?: str }
+
+    The frontend resolves which extraction folders to pair (one ground-truth
+    sample, one predicted-class sample). Backend re-uses the comparison
+    pipeline to render the figure + PDF.
+    """
+    ds = mres.get_dataset(ds_id)
+    if not ds:
+        raise HTTPException(404, "Dataset not found")
+    rows = {r["row_id"]: r for r in ds.get("rows", [])}
+    row = rows.get(int(payload.get("row_id", -1)))
+    if not row:
+        raise HTTPException(404, "Row not found")
+    groups = []
+    for pdir, lbl in [
+        (payload.get("gt_project_dir") or row["matched_output"], f"GT: {row['ground_truth']}"),
+        (payload.get("pred_project_dir"), f"Pred: {row['prediction']}"),
+    ]:
+        if not pdir:
+            continue
+        # load manifest to grab first few frames
+        p = os.path.join(OUTPUTS_DIR, pdir)
+        if not os.path.isdir(p):
+            continue
+        manifest = None
+        for fn in os.listdir(p):
+            if fn.startswith("manifest_") and fn.endswith(".json"):
+                with open(os.path.join(p, fn), encoding="utf-8") as f:
+                    manifest = json.load(f)
+                break
+        if not manifest:
+            continue
+        frames = manifest.get("frames", [])[:6]
+        sel = [{
+            "sample_index": f["sample_index"],
+            "original_frame_index": f["original_frame_index"],
+            "rgb_path": f"{pdir}/{f['rgb_file']}",
+            "pose_path": f"{pdir}/{f['pose_file']}",
+            "pair_path": f"{pdir}/{f['pair_file']}",
+        } for f in frames]
+        groups.append({
+            "video_name": manifest.get("video_name"),
+            "label": lbl,
+            "source": "extraction",
+            "project_dir": pdir,
+            "selected_frames": sel,
+        })
+    if len(groups) < 2:
+        raise HTTPException(400, "Cần cả ground-truth và predicted folders đã extract.")
+    cap_vi = f"Phân tích lỗi: mô hình dự đoán '{row['prediction']}' thay vì '{row['ground_truth']}'."
+    cap_en = f"Error analysis: model predicted '{row['prediction']}' instead of '{row['ground_truth']}'."
+    payload_render = {"groups": groups, "caption_en": cap_en, "caption_vi": cap_vi,
+                      "layout": {}, "include_quality_report": True, "annotations": []}
+    return _render_and_persist(payload_render)
+
