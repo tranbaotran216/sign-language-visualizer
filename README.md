@@ -68,6 +68,7 @@ API docs tự động tại: <http://127.0.0.1:8000/docs>
 ---
 
 ## 3. Chạy Frontend (React + Vite)
+để chạy được "npm" cần install (nodejs)[https://nodejs.org/en] 
 
 ```bash
 cd frontend
@@ -83,8 +84,8 @@ Mặc định mở tại <http://localhost:5173>. Frontend đã được cấu h
 
 - **Phase 1** ✅ — CSV metadata, batch upload tới 5 video, trích xuất MediaPipe Holistic (13 pose + 21 + 21 hands, dim = 110), output RGB / pose / pair / NPZ / grid / pose MP4 / pair MP4 / manifest / quality report / ZIP.
 - **Phase 2** ✅ — So sánh 2–5 video (chọn từ extraction result hoặc upload thủ công), parse tên file, render ảnh so sánh JPG/PNG, PDF report đầy đủ metadata + quality report, auto caption EN + VI.
-- **Phase 3** (sau) — Editor đơn giản (reorder / remove / annotation).
-- **Phase 4** (sau) — Output history manager nâng cao + reload config.
+- **Phase 3** ✅ — Editor đơn giản (reorder / remove / annotation).
+- **Phase 4** ✅ — Output history manager nâng cao + reload config.
 
 ---
 
