@@ -326,14 +326,3 @@ function Q({ label, v }: { label: string; v?: number }) {
     </div>
   );
 }
-
-function Q({ label, v }: { label: string; v?: number }) {
-  const pct = ((v ?? 0) * 100);
-  const warn = pct > 30;
-  return (
-    <div className={`rounded-md px-3 py-2 border text-xs ${warn ? "bg-amber-50 border-amber-200" : "bg-gray-50 border-gray-200"}`}>
-      <div className="text-gray-500">{label}</div>
-      <div className="font-semibold">{pct.toFixed(1)}%</div>
-    </div>
-  );
-}
