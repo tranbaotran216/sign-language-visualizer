@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function HistoryPage() {
   const [tab, setTab] = useState<"extractions" | "comparisons">("extractions");
@@ -50,7 +51,10 @@ export default function HistoryPage() {
     const r = await fetch(url);
     const cfg = await r.json();
     sessionStorage.setItem("preload_comparison_config", JSON.stringify(cfg));
-    window.location.href = "/compare?preload=1";
+    nav("/compare");
+  }
+  const nav = useNavigate();
+  // dummy line replaced below
   }
 
   const filtered = items.filter(it =>
