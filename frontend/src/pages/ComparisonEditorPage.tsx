@@ -171,7 +171,7 @@ export default function ComparisonEditorPage() {
       width: 16 + width * 2, height: 16 + width * 2, fill: stroke, angle: 90,
     });
     const g = new fabric.Group([line, head], { left: 80, top: 80 });
-    c.add(g).setActiveObject(g);
+    c.add(g); c.setActiveObject(g);
   }
   function addLine() {
     fcRef.current!.add(new fabric.Line([50, 50, 250, 50], { stroke, strokeWidth: width, left: 80, top: 80 }));
@@ -196,7 +196,7 @@ export default function ComparisonEditorPage() {
     const t = new fabric.IText("Chú thích", {
       left: 100, top: 100, fontSize, fill: textColor, fontFamily: "sans-serif",
     });
-    fcRef.current!.add(t).setActiveObject(t);
+    fcRef.current!.add(t); fcRef.current!.setActiveObject(t);
   }
 
   function onToolClick(t: Tool) {
