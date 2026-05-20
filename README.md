@@ -105,3 +105,39 @@ Bắt buộc 2 cột (các cột khác giữ nguyên):
 | Meaning   | Ground truth label (vd `môn tiếng việt`) |
 
 Ví dụ file: `ISLR_promax.csv`.
+
+## Phase 7 — Comparison Image Editor (draw.io-like)
+
+Route: `/comparison-editor` (sidebar: "Chỉnh sửa ảnh so sánh").
+
+From the comparison page, click **"Chỉnh sửa với editor"** on a generated result to open it in the editor. The editor uses **Fabric.js** with the comparison image locked as the background layer.
+
+Supported objects: mũi tên, đường thẳng, hình chữ nhật, hình tròn, hình oval, text box.
+
+Features:
+- Select / move / resize / rotate / delete
+- Stroke + fill color, stroke width, font size, opacity
+- Bring forward / send backward (background stays locked at the bottom)
+- Undo / redo (Ctrl+Z / Ctrl+Y, also via toolbar)
+- Zoom in / out / fit to screen
+- Export annotated image as **PNG / JPG**
+- Export annotated **PDF** (image + captions + metadata) using `jsPDF`
+- Save / load **editor project JSON**
+
+Backend endpoints (Phase 7):
+- `POST /api/editor/save-project` — store editor project JSON under `backend/outputs/_editor_projects/<id>/project.json`
+- `GET  /api/editor/load-project/{project_id}`
+- `POST /api/editor/export` — mirror a client-rendered annotated image into outputs
+
+## Session persistence (Task A)
+
+All page state (extraction config, comparison groups, selected frames, annotations,
+dataset QA filters, model-results mapping/filters, editor canvas) is autosaved to
+`localStorage` under the `kltn:` prefix. After reload you see the toast
+**"Đã khôi phục phiên làm việc trước đó."**.
+
+- Raw uploaded video/image File objects cannot be restored after reload — a notice is shown if missing.
+- Generated backend outputs in `backend/outputs/` remain available.
+- Sidebar button **"Xoá phiên làm việc hiện tại"** clears only the browser-side
+  session (it does NOT delete backend outputs). Use `/history` to delete outputs.
+- Navigation between sidebar tabs uses React Router (no full page reload).
