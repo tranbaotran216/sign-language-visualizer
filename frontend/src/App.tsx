@@ -7,6 +7,7 @@ import ComparePage from "./pages/ComparePage";
 import HistoryPage from "./pages/HistoryPage";
 import DatasetQAPage from "./pages/DatasetQAPage";
 import ModelResultsPage from "./pages/ModelResultsPage";
+import ComparisonEditorPage from "./pages/ComparisonEditorPage";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/metadata" element={<MetadataPage />} />
         <Route path="/extract" element={<ExtractPage />} />
         <Route path="/compare" element={<ComparePage />} />
+        <Route path="/comparison-editor" element={<ComparisonEditorPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/dataset-qa" element={<DatasetQAPage />} />
         <Route path="/model-results" element={<ModelResultsPage />} />
