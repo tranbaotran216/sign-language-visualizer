@@ -698,3 +698,30 @@ def model_results_error_analysis(ds_id: str, payload: Dict = Body(...)):
                       "layout": {}, "include_quality_report": True, "annotations": []}
     return _render_and_persist(payload_render)
 
+
+# ============================================================
+# Phase 7 — Editor projects (annotated comparison editor)
+# ============================================================
+from services import editor_projects as _editor
+
+@app.post("/api/editor/save-project")
+def editor_save_project(project: dict = Body(...)):
+    return _editor.save_project(OUTPUTS_DIR, project)
+
+@app.get("/api/editor/load-project/{project_id}")
+def editor_load_project(project_id: str):
+    p = _editor.load_project(OUTPUTS_DIR, project_id)
+    if not p:
+        raise HTTPException(404, "project not found")
+    return p
+
+@app.post("/api/editor/export")
+def editor_export(payload: dict = Body(...)):
+    """Persist a client-rendered annotated image. Body: {project_id, data_url, format}.
+    PDF export is done client-side; here we only mirror the PNG/JPG into outputs."""
+    pid = payload.get("project_id") or "ad_hoc"
+    fmt = payload.get("format", "png")
+    data_url = payload.get("data_url")
+    if not data_url:
+        raise HTTPException(400, "data_url required")
+    return _editor.export_image_from_dataurl(OUTPUTS_DIR, pid, data_url, fmt)
