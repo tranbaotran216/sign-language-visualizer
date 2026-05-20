@@ -443,6 +443,15 @@ export default function ComparePage() {
             <a className="btn-ghost" href={result.comparison_pdf_url} download>⬇ PDF report</a>
             <a className="btn-ghost" href={result.comparison_config_json_url} download>⬇ config.json</a>
             <a className="btn-ghost" href={result.comparison_zip_url} download>⬇ ZIP</a>
+            <Link className="btn-primary" to="/comparison-editor"
+                  onClick={() => {
+                    sessionStorage.setItem("editor.bg", JSON.stringify({
+                      url: result.comparison_image_url,
+                      comparison_id: result.comparison_id,
+                      caption_en: result.caption_en, caption_vi: result.caption_vi,
+                      metadata: result.metadata || null,
+                    }));
+                  }}>✏️ Chỉnh sửa với editor</Link>
           </div>
         </div>
       )}
