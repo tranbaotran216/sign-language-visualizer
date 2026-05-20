@@ -47,14 +47,12 @@ export default function HistoryPage() {
     } finally { setBusy(false); }
   }
 
+  const nav = useNavigate();
   async function reloadConfig(url: string) {
     const r = await fetch(url);
     const cfg = await r.json();
     sessionStorage.setItem("preload_comparison_config", JSON.stringify(cfg));
     nav("/compare");
-  }
-  const nav = useNavigate();
-  // dummy line replaced below
   }
 
   const filtered = items.filter(it =>
