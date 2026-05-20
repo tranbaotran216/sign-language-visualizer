@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { usePersistedState } from "../lib/session";
 
 type Row = {
   project_dir: string;
@@ -26,9 +27,9 @@ const STATUS_COLOR: Record<string, string> = {
 export default function DatasetQAPage() {
   const [summary, setSummary] = useState<any>(null);
   const [rows, setRows] = useState<Row[]>([]);
-  const [q, setQ] = useState("");
-  const [statusF, setStatusF] = useState<string>("all");
-  const [sort, setSort] = useState<"worst" | "name">("worst");
+  const [q, setQ] = usePersistedState("dq.q", "");
+  const [statusF, setStatusF] = usePersistedState<string>("dq.status", "all");
+  const [sort, setSort] = usePersistedState<"worst" | "name">("dq.sort", "worst");
   const [detail, setDetail] = useState<any>(null);
   const [busy, setBusy] = useState(false);
 

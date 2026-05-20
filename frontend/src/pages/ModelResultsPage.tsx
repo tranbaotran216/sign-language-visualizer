@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { usePersistedState } from "../lib/session";
 
 type Mapping = {
   video_id?: string | null;
@@ -29,13 +30,13 @@ type Summary = {
 };
 
 export default function ModelResultsPage() {
-  const [dsId, setDsId] = useState<string | null>(null);
-  const [columns, setColumns] = useState<string[]>([]);
-  const [mapping, setMapping] = useState<Mapping>({});
+  const [dsId, setDsId] = usePersistedState<string | null>("mr.dsId", null);
+  const [columns, setColumns] = usePersistedState<string[]>("mr.columns", []);
+  const [mapping, setMapping] = usePersistedState<Mapping>("mr.mapping", {});
   const [preview, setPreview] = useState<any[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
-  const [tab, setTab] = useState<string>("all");
-  const [q, setQ] = useState("");
+  const [tab, setTab] = usePersistedState<string>("mr.tab", "all");
+  const [q, setQ] = usePersistedState("mr.q", "");
   const [rows, setRows] = useState<Row[]>([]);
   const [detail, setDetail] = useState<Row | null>(null);
   const [err, setErr] = useState<string | null>(null);

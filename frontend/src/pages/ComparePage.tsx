@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { usePersistedState } from "../lib/session";
 
 type Output = {
   project_dir: string;
@@ -43,14 +45,14 @@ const DEFAULT_LAYOUT = {
 
 export default function ComparePage() {
   const [outputs, setOutputs] = useState<Output[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [layout, setLayout] = useState({ ...DEFAULT_LAYOUT });
-  const [frameCount, setFrameCount] = useState(5);
-  const [selectMode, setSelectMode] = useState<"first" | "even" | "manual">("even");
-  const [capEn, setCapEn] = useState("");
-  const [capVi, setCapVi] = useState("");
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
-  const [result, setResult] = useState<any>(null);
+  const [groups, setGroups] = usePersistedState<Group[]>("compare.groups", []);
+  const [layout, setLayout] = usePersistedState("compare.layout", { ...DEFAULT_LAYOUT });
+  const [frameCount, setFrameCount] = usePersistedState("compare.frameCount", 5);
+  const [selectMode, setSelectMode] = usePersistedState<"first" | "even" | "manual">("compare.selectMode", "even");
+  const [capEn, setCapEn] = usePersistedState("compare.capEn", "");
+  const [capVi, setCapVi] = usePersistedState("compare.capVi", "");
+  const [annotations, setAnnotations] = usePersistedState<Annotation[]>("compare.annotations", []);
+  const [result, setResult] = usePersistedState<any>("compare.result", null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const loadCfgInput = useRef<HTMLInputElement>(null);
@@ -441,6 +443,15 @@ export default function ComparePage() {
             <a className="btn-ghost" href={result.comparison_pdf_url} download>⬇ PDF report</a>
             <a className="btn-ghost" href={result.comparison_config_json_url} download>⬇ config.json</a>
             <a className="btn-ghost" href={result.comparison_zip_url} download>⬇ ZIP</a>
+            <Link className="btn-primary" to="/comparison-editor"
+                  onClick={() => {
+                    sessionStorage.setItem("editor.bg", JSON.stringify({
+                      url: result.comparison_image_url,
+                      comparison_id: result.comparison_id,
+                      caption_en: result.caption_en, caption_vi: result.caption_vi,
+                      metadata: result.metadata || null,
+                    }));
+                  }}>✏️ Chỉnh sửa với editor</Link>
           </div>
         </div>
       )}

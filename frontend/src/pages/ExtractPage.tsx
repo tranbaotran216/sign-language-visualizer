@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { usePersistedState } from "../lib/session";
+import { useToast } from "../components/Toast";
 
 type VideoRow = {
-  file: File;
+  file?: File;
   original_filename: string;
   video_id: string;
   label: string;
@@ -25,11 +27,22 @@ const DEFAULT_CFG: Config = {
 };
 
 export default function ExtractPage() {
-  const [rows, setRows] = useState<VideoRow[]>([]);
-  const [cfg, setCfg] = useState<Config>(DEFAULT_CFG);
-  const [batch, setBatch] = useState<any>(null);
+  const [rows, setRows] = usePersistedState<VideoRow[]>("extract.rows", []);
+  const [cfg, setCfg] = usePersistedState<Config>("extract.cfg", DEFAULT_CFG);
+  const [batch, setBatch] = usePersistedState<any>("extract.batch", null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const { push: toast } = useToast();
+  useEffect(() => {
+    // Resume polling if we have a previous batch
+    if (batch?.batch_id && batch.batch_status !== "completed" && batch.batch_status !== "completed_with_errors") {
+      poll(batch.batch_id);
+    }
+    // Warn if rows existed but raw files were not restored
+    const missing = rows.some(r => !r.file);
+    if (missing) toast("info", "File upload gốc không thể khôi phục sau khi reload. Vui lòng upload lại nếu cần xử lý mới.");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const metadataId = typeof window !== "undefined" ? localStorage.getItem("metadata_id") : null;
   const metadataName = typeof window !== "undefined" ? localStorage.getItem("metadata_filename") : null;
   const pollTimer = useRef<number | null>(null);
@@ -64,10 +77,11 @@ export default function ExtractPage() {
 
   async function start() {
     if (rows.length === 0) { setErr("Cần ít nhất 1 video."); return; }
+    if (rows.some(r => !r.file)) { setErr("Một số file gốc đã mất sau reload. Vui lòng upload lại."); return; }
     setBusy(true); setErr(null); setBatch(null);
     try {
       const fd = new FormData();
-      for (const r of rows) fd.append("videos", r.file, r.original_filename);
+      for (const r of rows) fd.append("videos", r.file as File, r.original_filename);
       const cfgFull = {
         ...cfg,
         per_video_overrides: rows.map(r => ({
