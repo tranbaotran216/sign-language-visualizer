@@ -77,10 +77,11 @@ export default function ExtractPage() {
 
   async function start() {
     if (rows.length === 0) { setErr("Cần ít nhất 1 video."); return; }
+    if (rows.some(r => !r.file)) { setErr("Một số file gốc đã mất sau reload. Vui lòng upload lại."); return; }
     setBusy(true); setErr(null); setBatch(null);
     try {
       const fd = new FormData();
-      for (const r of rows) fd.append("videos", r.file, r.original_filename);
+      for (const r of rows) fd.append("videos", r.file as File, r.original_filename);
       const cfgFull = {
         ...cfg,
         per_video_overrides: rows.map(r => ({
