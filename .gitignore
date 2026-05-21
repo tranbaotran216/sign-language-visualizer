@@ -1,1 +1,5 @@
 node_modules/
+*.mp4
+*.jpg
+*.png
+*.npz
