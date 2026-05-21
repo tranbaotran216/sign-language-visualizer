@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import jsPDF from "jspdf";
 import { usePersistedState } from "../lib/session";
 import { useToast } from "../components/Toast";
