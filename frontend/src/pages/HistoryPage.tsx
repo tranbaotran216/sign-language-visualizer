@@ -104,6 +104,10 @@ export default function HistoryPage() {
               <div className="text-xs text-gray-500 mt-1">{it.created_at}</div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {it.zip_url && <a href={it.zip_url} className="btn-ghost text-xs" download>⬇ ZIP</a>}
+                <button className="btn-ghost text-xs" onClick={() => {
+                  sessionStorage.setItem("kltn:overlay:handoff", JSON.stringify({ project_dirs: [it.project_dir] }));
+                  nav("/overlay");
+                }}>🌀 Tạo overlay</button>
                 <button className="btn-ghost text-xs text-red-600" onClick={() => del(it.project_dir)}>Xoá</button>
               </div>
             </div>
