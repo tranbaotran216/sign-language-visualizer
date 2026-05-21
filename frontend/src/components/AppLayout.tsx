@@ -12,6 +12,7 @@ const nav = [
   { to: "/history", label: "Lịch sử outputs", icon: "🗂️" },
   { to: "/dataset-qa", label: "Phân tích chất lượng dataset", icon: "📊" },
   { to: "/model-results", label: "Visualize kết quả model", icon: "🤖" },
+  { to: "/overlay", label: "Overlay chuyển động", icon: "🌀" },
 ];
 
 export default function AppLayout() {

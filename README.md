@@ -88,7 +88,8 @@ Mặc định mở tại <http://localhost:5173>. Frontend đã được cấu h
 - **Phase 4** ✅ — Output history manager nâng cao + reload config + nút "Xoá toàn bộ lịch sử" (`DELETE /api/history/all`).
 - **Phase 5** ✅ — Trang **Phân tích chất lượng dataset** (`/dataset-qa`): quét toàn bộ outputs, dashboard cards (avg pose / LH / RH / all-zero missing), bảng filter theo Good / Warning / Bad / Critical, top 10 worst videos, export CSV + PDF.
 - **Phase 6** ✅ — Trang **Visualize kết quả model** (`/model-results`): import prediction CSV, auto-detect + manual column mapping, ghép prediction row với extraction folder, tabs Correct/Wrong/Low-conf/High-conf-wrong + RGB/Pose/Fusion wins (khi có nhiều modality), modal chi tiết và nút **Tạo ảnh phân tích lỗi** dùng lại comparison renderer.
-- **Phase 7** ✅
+- **Phase 7** ✅ — Comparison Image Editor (draw.io-like).
+- **Phase 8** ✅ — **Overlay chuyển động** (`/overlay`): chồng nhiều frame keypoints lên 1 canvas để minh hoạ chuyển động theo thời gian. 4 chế độ: `skeleton`, `wrist_path`, `fingertip_path`, `rgb_overlay`. Hỗ trợ sampling 5–10 frames (mặc định 9, KHÔNG overlay toàn bộ 64), landmark presets (`large_trajectory`, `fine_temporal`, `occlusion_hand`, `full_pose`) + override thủ công, gradient màu theo thời gian (`warm`/`cool`/`viridis`/`lr_split`), alpha progression, start/end markers, arrow direction, RGB background, temporal legend. Layouts: single, multi-row (so sánh nhiều video), side-by-side (4 variants cùng 1 video). Export PNG/JPG/PDF + save/load project JSON. Truy cập nhanh qua nút **"🌀 Tạo overlay"** ở trang History. Backend endpoints: `POST /api/overlay/create`, `POST /api/overlay/{id}/rerender`, `GET /api/overlay`, `GET/DELETE /api/overlay/{id}`, `GET /api/overlay/presets`. Outputs lưu tại `backend/outputs/_overlays/{id}/`.
 
 ### Ghi chú quan trọng về LH / RH
 

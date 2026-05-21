@@ -8,6 +8,7 @@ import HistoryPage from "./pages/HistoryPage";
 import DatasetQAPage from "./pages/DatasetQAPage";
 import ModelResultsPage from "./pages/ModelResultsPage";
 import ComparisonEditorPage from "./pages/ComparisonEditorPage";
+import OverlayPage from "./pages/OverlayPage";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/dataset-qa" element={<DatasetQAPage />} />
         <Route path="/model-results" element={<ModelResultsPage />} />
+        <Route path="/overlay" element={<OverlayPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
