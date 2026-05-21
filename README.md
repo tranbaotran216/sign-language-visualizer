@@ -88,6 +88,7 @@ Mặc định mở tại <http://localhost:5173>. Frontend đã được cấu h
 - **Phase 4** ✅ — Output history manager nâng cao + reload config + nút "Xoá toàn bộ lịch sử" (`DELETE /api/history/all`).
 - **Phase 5** ✅ — Trang **Phân tích chất lượng dataset** (`/dataset-qa`): quét toàn bộ outputs, dashboard cards (avg pose / LH / RH / all-zero missing), bảng filter theo Good / Warning / Bad / Critical, top 10 worst videos, export CSV + PDF.
 - **Phase 6** ✅ — Trang **Visualize kết quả model** (`/model-results`): import prediction CSV, auto-detect + manual column mapping, ghép prediction row với extraction folder, tabs Correct/Wrong/Low-conf/High-conf-wrong + RGB/Pose/Fusion wins (khi có nhiều modality), modal chi tiết và nút **Tạo ảnh phân tích lỗi** dùng lại comparison renderer.
+- **Phase 7** ✅
 
 ### Ghi chú quan trọng về LH / RH
 
