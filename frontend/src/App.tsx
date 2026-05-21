@@ -8,6 +8,7 @@ import HistoryPage from "./pages/HistoryPage";
 import DatasetQAPage from "./pages/DatasetQAPage";
 import ModelResultsPage from "./pages/ModelResultsPage";
 import ComparisonEditorPage from "./pages/ComparisonEditorPage";
+import OverlayPage from "./pages/OverlayPage";
 
 export default function App() {
   return (
