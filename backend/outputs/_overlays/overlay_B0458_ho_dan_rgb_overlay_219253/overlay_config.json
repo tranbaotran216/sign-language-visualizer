@@ -1,0 +1,54 @@
+{
+  "overlay_project_id": "overlay_B0458_ho_dan_rgb_overlay_219253",
+  "overlay_type": "rgb_overlay",
+  "layout_mode": "single",
+  "landmark_preset": "fine_temporal",
+  "selected_landmarks": [
+    "left_wrist",
+    "right_wrist",
+    "left_index_tip",
+    "right_index_tip",
+    "left_thumb_tip",
+    "right_thumb_tip"
+  ],
+  "frame_selection": {
+    "mode": "evenly",
+    "count": 9,
+    "sample_indices": []
+  },
+  "style": {
+    "color_mode": "gradient",
+    "gradient_name": "warm",
+    "single_color": [
+      220,
+      30,
+      30
+    ],
+    "alpha_start": 0.25,
+    "alpha_end": 1.0,
+    "show_start_marker": true,
+    "show_end_marker": true,
+    "show_arrow_direction": true,
+    "line_width": 3,
+    "trajectory_width": 3,
+    "point_radius": 4,
+    "marker_radius": 8,
+    "background_mode": "rgb_middle",
+    "background_rgb_index": -1,
+    "background_opacity": 0.85,
+    "show_title": true,
+    "show_legend": true,
+    "show_temporal_legend": true
+  },
+  "title": "demo rgb_overlay",
+  "caption_en": "",
+  "caption_vi": "",
+  "source_items": [
+    {
+      "project_dir": "B0458_ho_dan",
+      "video_name": "B0458",
+      "label": "hồ_dán",
+      "safe_label": "ho_dan"
+    }
+  ]
+}
