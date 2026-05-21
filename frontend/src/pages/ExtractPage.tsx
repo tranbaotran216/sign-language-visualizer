@@ -11,20 +11,29 @@ type VideoRow = {
 };
 
 type Config = {
+  extractor: "mediapipe" | "vitpose";
   timesteps: number; sampling_mode: "iter" | "mid" | "mix"; timeout: number;
   tile_w: number; tile_h: number; grid_cols: number;
   save_rgb: boolean; save_pose: boolean; save_pair: boolean; save_grid: boolean;
   save_pose_video: boolean; save_pair_video: boolean;
   generate_npz: boolean; generate_quality_report: boolean; overwrite: boolean;
+  vitpose_config?: string; vitpose_ckpt?: string; vitpose_conda_env: string; vitpose_device: string;
 };
 
 const DEFAULT_CFG: Config = {
+  extractor: "mediapipe",
   timesteps: 64, sampling_mode: "iter", timeout: 120,
   tile_w: 160, tile_h: 120, grid_cols: 8,
   save_rgb: true, save_pose: true, save_pair: true, save_grid: true,
   save_pose_video: true, save_pair_video: true,
   generate_npz: true, generate_quality_report: true, overwrite: true,
+  vitpose_conda_env: "kltn_vitpose",
+  vitpose_device: "cuda:0",
 };
+
+function isRealFile(value: unknown): value is File {
+  return typeof File !== "undefined" && value instanceof File;
+}
 
 export default function ExtractPage() {
   const [rows, setRows] = usePersistedState<VideoRow[]>("extract.rows", []);
@@ -39,7 +48,7 @@ export default function ExtractPage() {
       poll(batch.batch_id);
     }
     // Warn if rows existed but raw files were not restored
-    const missing = rows.some(r => !r.file);
+    const missing = rows.some(r => !isRealFile(r.file));
     if (missing) toast("info", "File upload gốc không thể khôi phục sau khi reload. Vui lòng upload lại nếu cần xử lý mới.");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -159,6 +168,13 @@ export default function ExtractPage() {
       <div className="card mt-6">
         <h2 className="font-semibold mb-3">Cấu hình trích xuất</h2>
         <div className="grid sm:grid-cols-3 md:grid-cols-6 gap-3">
+          <Field label="Extractor">
+            <select className="input" value={cfg.extractor || "mediapipe"}
+              onChange={e => setCfg({ ...cfg, extractor: e.target.value as Config["extractor"] })}>
+              <option value="mediapipe">MediaPipe</option>
+              <option value="vitpose">ViTPose</option>
+            </select>
+          </Field>
           <Field label="Timesteps"><input type="number" className="input" value={cfg.timesteps}
             onChange={e => setCfg({ ...cfg, timesteps: +e.target.value })} /></Field>
           <Field label="Sampling">
@@ -188,6 +204,29 @@ export default function ExtractPage() {
             </label>
           ))}
         </div>
+        {(cfg.extractor || "mediapipe") === "vitpose" && (
+          <div className="mt-5 border-t pt-4">
+            <h3 className="font-semibold text-sm mb-3">ViTPose settings</h3>
+            <div className="grid md:grid-cols-2 gap-3">
+              <Field label="ViTPose config path">
+                <input className="input font-mono text-xs" value={cfg.vitpose_config || ""}
+                  onChange={e => setCfg({ ...cfg, vitpose_config: e.target.value })} />
+              </Field>
+              <Field label="ViTPose checkpoint path">
+                <input className="input font-mono text-xs" value={cfg.vitpose_ckpt || ""}
+                  onChange={e => setCfg({ ...cfg, vitpose_ckpt: e.target.value })} />
+              </Field>
+              <Field label="Conda env">
+                <input className="input" value={cfg.vitpose_conda_env || "kltn_vitpose"}
+                  onChange={e => setCfg({ ...cfg, vitpose_conda_env: e.target.value })} />
+              </Field>
+              <Field label="Device">
+                <input className="input" value={cfg.vitpose_device || "cuda:0"}
+                  onChange={e => setCfg({ ...cfg, vitpose_device: e.target.value })} />
+              </Field>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-6 flex items-center gap-3">

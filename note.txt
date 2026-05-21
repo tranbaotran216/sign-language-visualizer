@@ -1,0 +1,4 @@
+backend:
+cd backend
+conda activate kltn-vsl
+uvicorn main:app

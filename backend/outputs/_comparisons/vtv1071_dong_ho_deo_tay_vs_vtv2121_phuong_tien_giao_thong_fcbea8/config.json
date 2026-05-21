@@ -1,0 +1,95 @@
+{
+  "comparison_id": "vtv1071_dong_ho_deo_tay_vs_vtv2121_phuong_tien_giao_thong_fcbea8",
+  "labels": [
+    "VTV1071_đồng_hồ_đeo_tay",
+    "VTV2121_phương_tiện_giao_thông"
+  ],
+  "safe_labels": [
+    "vtv1071_dong_ho_deo_tay",
+    "vtv2121_phuong_tien_giao_thong"
+  ],
+  "caption_en": "Comparison between signs 'VTV1071_đồng_hồ_đeo_tay' and 'VTV2121_phương_tiện_giao_thông' using RGB and MediaPipe landmark visualization.",
+  "caption_vi": "So sánh trực quan giữa các ký hiệu ‘VTV1071_đồng_hồ_đeo_tay’ và ‘VTV2121_phương_tiện_giao_thông’ bằng ảnh RGB và landmark MediaPipe.",
+  "layout": {
+    "tile_width": 240,
+    "rgb_height": 145,
+    "pose_height": 150,
+    "cell_gap": 12,
+    "row_gap": 42,
+    "top_margin": 30,
+    "bottom_margin": 30,
+    "side_margin": 30,
+    "title_font_size": 28,
+    "frame_label_font_size": 18,
+    "background_color": "#ffffff",
+    "text_color": "#000000",
+    "include_titles": true,
+    "include_frame_labels": true
+  },
+  "groups": [
+    {
+      "video_name": "VTV1071",
+      "label": "VTV1071_đồng_hồ_đeo_tay",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 15,
+          "original_frame_index": 19,
+          "rgb_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/rgb/rgb_VTV1071_vtv1071_dong_ho_deo_tay_015_000019.jpg",
+          "pose_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/pose/pose_VTV1071_vtv1071_dong_ho_deo_tay_015_000019.jpg",
+          "pair_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/pair/pair_VTV1071_vtv1071_dong_ho_deo_tay_015_000019.jpg",
+          "thumb": "/files/VTV1071_vtv1071_dong_ho_deo_tay/frames/pair/pair_VTV1071_vtv1071_dong_ho_deo_tay_015_000019.jpg"
+        },
+        {
+          "sample_index": 20,
+          "original_frame_index": 25,
+          "rgb_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/rgb/rgb_VTV1071_vtv1071_dong_ho_deo_tay_020_000025.jpg",
+          "pose_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/pose/pose_VTV1071_vtv1071_dong_ho_deo_tay_020_000025.jpg",
+          "pair_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/pair/pair_VTV1071_vtv1071_dong_ho_deo_tay_020_000025.jpg",
+          "thumb": "/files/VTV1071_vtv1071_dong_ho_deo_tay/frames/pair/pair_VTV1071_vtv1071_dong_ho_deo_tay_020_000025.jpg"
+        },
+        {
+          "sample_index": 42,
+          "original_frame_index": 53,
+          "rgb_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/rgb/rgb_VTV1071_vtv1071_dong_ho_deo_tay_042_000053.jpg",
+          "pose_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/pose/pose_VTV1071_vtv1071_dong_ho_deo_tay_042_000053.jpg",
+          "pair_path": "VTV1071_vtv1071_dong_ho_deo_tay/frames/pair/pair_VTV1071_vtv1071_dong_ho_deo_tay_042_000053.jpg",
+          "thumb": "/files/VTV1071_vtv1071_dong_ho_deo_tay/frames/pair/pair_VTV1071_vtv1071_dong_ho_deo_tay_042_000053.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "VTV2121",
+      "label": "VTV2121_phương_tiện_giao_thông",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 23,
+          "original_frame_index": 38,
+          "rgb_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/rgb/rgb_VTV2121_vtv2121_phuong_tien_giao_thong_023_000038.jpg",
+          "pose_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/pose/pose_VTV2121_vtv2121_phuong_tien_giao_thong_023_000038.jpg",
+          "pair_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/pair/pair_VTV2121_vtv2121_phuong_tien_giao_thong_023_000038.jpg",
+          "thumb": "/files/VTV2121_vtv2121_phuong_tien_giao_thong/frames/pair/pair_VTV2121_vtv2121_phuong_tien_giao_thong_023_000038.jpg"
+        },
+        {
+          "sample_index": 35,
+          "original_frame_index": 57,
+          "rgb_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/rgb/rgb_VTV2121_vtv2121_phuong_tien_giao_thong_035_000057.jpg",
+          "pose_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/pose/pose_VTV2121_vtv2121_phuong_tien_giao_thong_035_000057.jpg",
+          "pair_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/pair/pair_VTV2121_vtv2121_phuong_tien_giao_thong_035_000057.jpg",
+          "thumb": "/files/VTV2121_vtv2121_phuong_tien_giao_thong/frames/pair/pair_VTV2121_vtv2121_phuong_tien_giao_thong_035_000057.jpg"
+        },
+        {
+          "sample_index": 42,
+          "original_frame_index": 69,
+          "rgb_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/rgb/rgb_VTV2121_vtv2121_phuong_tien_giao_thong_042_000069.jpg",
+          "pose_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/pose/pose_VTV2121_vtv2121_phuong_tien_giao_thong_042_000069.jpg",
+          "pair_path": "VTV2121_vtv2121_phuong_tien_giao_thong/frames/pair/pair_VTV2121_vtv2121_phuong_tien_giao_thong_042_000069.jpg",
+          "thumb": "/files/VTV2121_vtv2121_phuong_tien_giao_thong/frames/pair/pair_VTV2121_vtv2121_phuong_tien_giao_thong_042_000069.jpg"
+        }
+      ]
+    }
+  ],
+  "annotations": [],
+  "created_at": "2026-05-20T12:48:59"
+}

@@ -1,0 +1,128 @@
+{
+  "comparison_id": "mon_am_nhac_vs_mon_tieng_viet_vs_mon_tieng_viet_18507a",
+  "labels": [
+    "môn_âm_nhạc",
+    "môn_tiếng_việt",
+    "môn_tiếng_việt"
+  ],
+  "safe_labels": [
+    "mon_am_nhac",
+    "mon_tieng_viet",
+    "mon_tieng_viet"
+  ],
+  "caption_en": "Comparison between signs 'môn_âm_nhạc', 'môn_tiếng_việt', and 'môn_tiếng_việt' using RGB and MediaPipe landmark visualization.",
+  "caption_vi": "So sánh trực quan giữa các ký hiệu ‘môn_âm_nhạc’, ‘môn_tiếng_việt’ và ‘môn_tiếng_việt’ bằng ảnh RGB và landmark MediaPipe.",
+  "layout": {
+    "tile_width": 240,
+    "rgb_height": 145,
+    "pose_height": 150,
+    "cell_gap": 12,
+    "row_gap": 42,
+    "top_margin": 30,
+    "bottom_margin": 30,
+    "side_margin": 30,
+    "title_font_size": 28,
+    "frame_label_font_size": 18,
+    "background_color": "#ffffff",
+    "text_color": "#000000",
+    "include_titles": true,
+    "include_frame_labels": true
+  },
+  "groups": [
+    {
+      "video_name": "B0299",
+      "label": "môn_âm_nhạc",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 4,
+          "original_frame_index": 7,
+          "rgb_path": "B0299_mon_am_nhac/frames/rgb/rgb_B0299_mon_am_nhac_004_000007.jpg",
+          "pose_path": "B0299_mon_am_nhac/frames/pose/pose_B0299_mon_am_nhac_004_000007.jpg",
+          "pair_path": "B0299_mon_am_nhac/frames/pair/pair_B0299_mon_am_nhac_004_000007.jpg",
+          "thumb": "/files/B0299_mon_am_nhac/frames/pair/pair_B0299_mon_am_nhac_004_000007.jpg"
+        },
+        {
+          "sample_index": 13,
+          "original_frame_index": 24,
+          "rgb_path": "B0299_mon_am_nhac/frames/rgb/rgb_B0299_mon_am_nhac_013_000024.jpg",
+          "pose_path": "B0299_mon_am_nhac/frames/pose/pose_B0299_mon_am_nhac_013_000024.jpg",
+          "pair_path": "B0299_mon_am_nhac/frames/pair/pair_B0299_mon_am_nhac_013_000024.jpg",
+          "thumb": "/files/B0299_mon_am_nhac/frames/pair/pair_B0299_mon_am_nhac_013_000024.jpg"
+        },
+        {
+          "sample_index": 25,
+          "original_frame_index": 46,
+          "rgb_path": "B0299_mon_am_nhac/frames/rgb/rgb_B0299_mon_am_nhac_025_000046.jpg",
+          "pose_path": "B0299_mon_am_nhac/frames/pose/pose_B0299_mon_am_nhac_025_000046.jpg",
+          "pair_path": "B0299_mon_am_nhac/frames/pair/pair_B0299_mon_am_nhac_025_000046.jpg",
+          "thumb": "/files/B0299_mon_am_nhac/frames/pair/pair_B0299_mon_am_nhac_025_000046.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "B0262",
+      "label": "môn_tiếng_việt",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 31,
+          "original_frame_index": 71,
+          "rgb_path": "B0262_mon_tieng_viet/frames/rgb/rgb_B0262_mon_tieng_viet_031_000071.jpg",
+          "pose_path": "B0262_mon_tieng_viet/frames/pose/pose_B0262_mon_tieng_viet_031_000071.jpg",
+          "pair_path": "B0262_mon_tieng_viet/frames/pair/pair_B0262_mon_tieng_viet_031_000071.jpg",
+          "thumb": "/files/B0262_mon_tieng_viet/frames/pair/pair_B0262_mon_tieng_viet_031_000071.jpg"
+        },
+        {
+          "sample_index": 37,
+          "original_frame_index": 85,
+          "rgb_path": "B0262_mon_tieng_viet/frames/rgb/rgb_B0262_mon_tieng_viet_037_000085.jpg",
+          "pose_path": "B0262_mon_tieng_viet/frames/pose/pose_B0262_mon_tieng_viet_037_000085.jpg",
+          "pair_path": "B0262_mon_tieng_viet/frames/pair/pair_B0262_mon_tieng_viet_037_000085.jpg",
+          "thumb": "/files/B0262_mon_tieng_viet/frames/pair/pair_B0262_mon_tieng_viet_037_000085.jpg"
+        },
+        {
+          "sample_index": 44,
+          "original_frame_index": 101,
+          "rgb_path": "B0262_mon_tieng_viet/frames/rgb/rgb_B0262_mon_tieng_viet_044_000101.jpg",
+          "pose_path": "B0262_mon_tieng_viet/frames/pose/pose_B0262_mon_tieng_viet_044_000101.jpg",
+          "pair_path": "B0262_mon_tieng_viet/frames/pair/pair_B0262_mon_tieng_viet_044_000101.jpg",
+          "thumb": "/files/B0262_mon_tieng_viet/frames/pair/pair_B0262_mon_tieng_viet_044_000101.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "B0700",
+      "label": "môn_tiếng_việt",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 23,
+          "original_frame_index": 26,
+          "rgb_path": "B0700_mon_tieng_viet/frames/rgb/rgb_B0700_mon_tieng_viet_023_000026.jpg",
+          "pose_path": "B0700_mon_tieng_viet/frames/pose/pose_B0700_mon_tieng_viet_023_000026.jpg",
+          "pair_path": "B0700_mon_tieng_viet/frames/pair/pair_B0700_mon_tieng_viet_023_000026.jpg",
+          "thumb": "/files/B0700_mon_tieng_viet/frames/pair/pair_B0700_mon_tieng_viet_023_000026.jpg"
+        },
+        {
+          "sample_index": 24,
+          "original_frame_index": 27,
+          "rgb_path": "B0700_mon_tieng_viet/frames/rgb/rgb_B0700_mon_tieng_viet_024_000027.jpg",
+          "pose_path": "B0700_mon_tieng_viet/frames/pose/pose_B0700_mon_tieng_viet_024_000027.jpg",
+          "pair_path": "B0700_mon_tieng_viet/frames/pair/pair_B0700_mon_tieng_viet_024_000027.jpg",
+          "thumb": "/files/B0700_mon_tieng_viet/frames/pair/pair_B0700_mon_tieng_viet_024_000027.jpg"
+        },
+        {
+          "sample_index": 36,
+          "original_frame_index": 41,
+          "rgb_path": "B0700_mon_tieng_viet/frames/rgb/rgb_B0700_mon_tieng_viet_036_000041.jpg",
+          "pose_path": "B0700_mon_tieng_viet/frames/pose/pose_B0700_mon_tieng_viet_036_000041.jpg",
+          "pair_path": "B0700_mon_tieng_viet/frames/pair/pair_B0700_mon_tieng_viet_036_000041.jpg",
+          "thumb": "/files/B0700_mon_tieng_viet/frames/pair/pair_B0700_mon_tieng_viet_036_000041.jpg"
+        }
+      ]
+    }
+  ],
+  "annotations": [],
+  "created_at": "2026-05-20T12:56:57"
+}

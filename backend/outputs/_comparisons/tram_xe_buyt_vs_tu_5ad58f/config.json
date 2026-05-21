@@ -1,0 +1,111 @@
+{
+  "comparison_id": "tram_xe_buyt_vs_tu_5ad58f",
+  "labels": [
+    "trạm_xe_buýt",
+    "tủ"
+  ],
+  "safe_labels": [
+    "tram_xe_buyt",
+    "tu"
+  ],
+  "caption_en": "Comparison between signs 'trạm_xe_buýt' and 'tủ' using RGB and MediaPipe landmark visualization.",
+  "caption_vi": "So sánh trực quan giữa các ký hiệu ‘trạm_xe_buýt’ và ‘tủ’ bằng ảnh RGB và landmark MediaPipe.",
+  "layout": {
+    "tile_width": 240,
+    "rgb_height": 145,
+    "pose_height": 150,
+    "cell_gap": 12,
+    "row_gap": 42,
+    "top_margin": 30,
+    "bottom_margin": 30,
+    "side_margin": 30,
+    "title_font_size": 28,
+    "frame_label_font_size": 18,
+    "background_color": "#ffffff",
+    "text_color": "#000000",
+    "include_titles": true,
+    "include_frame_labels": false
+  },
+  "groups": [
+    {
+      "video_name": "VTV2282",
+      "label": "trạm_xe_buýt",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 17,
+          "original_frame_index": 20,
+          "rgb_path": "VTV2282_tram_xe_buyt/frames/rgb/rgb_VTV2282_tram_xe_buyt_017_000020.jpg",
+          "pose_path": "VTV2282_tram_xe_buyt/frames/pose/pose_VTV2282_tram_xe_buyt_017_000020.jpg",
+          "pair_path": "VTV2282_tram_xe_buyt/frames/pair/pair_VTV2282_tram_xe_buyt_017_000020.jpg",
+          "thumb": "/files/VTV2282_tram_xe_buyt/frames/pair/pair_VTV2282_tram_xe_buyt_017_000020.jpg"
+        },
+        {
+          "sample_index": 20,
+          "original_frame_index": 23,
+          "rgb_path": "VTV2282_tram_xe_buyt/frames/rgb/rgb_VTV2282_tram_xe_buyt_020_000023.jpg",
+          "pose_path": "VTV2282_tram_xe_buyt/frames/pose/pose_VTV2282_tram_xe_buyt_020_000023.jpg",
+          "pair_path": "VTV2282_tram_xe_buyt/frames/pair/pair_VTV2282_tram_xe_buyt_020_000023.jpg",
+          "thumb": "/files/VTV2282_tram_xe_buyt/frames/pair/pair_VTV2282_tram_xe_buyt_020_000023.jpg"
+        },
+        {
+          "sample_index": 30,
+          "original_frame_index": 35,
+          "rgb_path": "VTV2282_tram_xe_buyt/frames/rgb/rgb_VTV2282_tram_xe_buyt_030_000035.jpg",
+          "pose_path": "VTV2282_tram_xe_buyt/frames/pose/pose_VTV2282_tram_xe_buyt_030_000035.jpg",
+          "pair_path": "VTV2282_tram_xe_buyt/frames/pair/pair_VTV2282_tram_xe_buyt_030_000035.jpg",
+          "thumb": "/files/VTV2282_tram_xe_buyt/frames/pair/pair_VTV2282_tram_xe_buyt_030_000035.jpg"
+        },
+        {
+          "sample_index": 51,
+          "original_frame_index": 60,
+          "rgb_path": "VTV2282_tram_xe_buyt/frames/rgb/rgb_VTV2282_tram_xe_buyt_051_000060.jpg",
+          "pose_path": "VTV2282_tram_xe_buyt/frames/pose/pose_VTV2282_tram_xe_buyt_051_000060.jpg",
+          "pair_path": "VTV2282_tram_xe_buyt/frames/pair/pair_VTV2282_tram_xe_buyt_051_000060.jpg",
+          "thumb": "/files/VTV2282_tram_xe_buyt/frames/pair/pair_VTV2282_tram_xe_buyt_051_000060.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "VTV1300",
+      "label": "tủ",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 16,
+          "original_frame_index": 15,
+          "rgb_path": "VTV1300_tu/frames/rgb/rgb_VTV1300_tu_016_000015.jpg",
+          "pose_path": "VTV1300_tu/frames/pose/pose_VTV1300_tu_016_000015.jpg",
+          "pair_path": "VTV1300_tu/frames/pair/pair_VTV1300_tu_016_000015.jpg",
+          "thumb": "/files/VTV1300_tu/frames/pair/pair_VTV1300_tu_016_000015.jpg"
+        },
+        {
+          "sample_index": 38,
+          "original_frame_index": 36,
+          "rgb_path": "VTV1300_tu/frames/rgb/rgb_VTV1300_tu_038_000036.jpg",
+          "pose_path": "VTV1300_tu/frames/pose/pose_VTV1300_tu_038_000036.jpg",
+          "pair_path": "VTV1300_tu/frames/pair/pair_VTV1300_tu_038_000036.jpg",
+          "thumb": "/files/VTV1300_tu/frames/pair/pair_VTV1300_tu_038_000036.jpg"
+        },
+        {
+          "sample_index": 45,
+          "original_frame_index": 43,
+          "rgb_path": "VTV1300_tu/frames/rgb/rgb_VTV1300_tu_045_000043.jpg",
+          "pose_path": "VTV1300_tu/frames/pose/pose_VTV1300_tu_045_000043.jpg",
+          "pair_path": "VTV1300_tu/frames/pair/pair_VTV1300_tu_045_000043.jpg",
+          "thumb": "/files/VTV1300_tu/frames/pair/pair_VTV1300_tu_045_000043.jpg"
+        },
+        {
+          "sample_index": 47,
+          "original_frame_index": 45,
+          "rgb_path": "VTV1300_tu/frames/rgb/rgb_VTV1300_tu_047_000045.jpg",
+          "pose_path": "VTV1300_tu/frames/pose/pose_VTV1300_tu_047_000045.jpg",
+          "pair_path": "VTV1300_tu/frames/pair/pair_VTV1300_tu_047_000045.jpg",
+          "thumb": "/files/VTV1300_tu/frames/pair/pair_VTV1300_tu_047_000045.jpg"
+        }
+      ]
+    }
+  ],
+  "annotations": [],
+  "created_at": "2026-05-20T16:57:54"
+}

@@ -9,8 +9,11 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import subprocess
+import tempfile
 import zipfile
 from dataclasses import dataclass, field, asdict
+from pathlib import Path
 from typing import List, Dict, Optional, Callable
 
 import cv2
@@ -31,6 +34,19 @@ POSE_INDICES = [0, 2, 5, 7, 8, 11, 12, 13, 14, 15, 16, 23, 24]
 N_POSE = len(POSE_INDICES)
 N_HAND = 21
 KP_DIM = (N_POSE + N_HAND + N_HAND) * 2  # 110
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_VITPOSE_WORKER = PROJECT_ROOT / "vitpose_worker.py"
+DEFAULT_VITPOSE_CONFIG = (
+    PROJECT_ROOT
+    / "ViTPose"
+    / "configs"
+    / "wholebody"
+    / "2d_kpt_sview_rgb_img"
+    / "topdown_heatmap"
+    / "coco-wholebody"
+    / "ViTPose_large_wholebody_256x192.py"
+)
+DEFAULT_VITPOSE_CKPT = PROJECT_ROOT / "source_code" / "weights_config" / "vitpose-l-wholebody.pth"
 
 
 # --------------------------------------------------------------- sampling
@@ -55,6 +71,39 @@ def sample_indices(total: int, timesteps: int, mode: str = "iter") -> List[int]:
         b = [min(total - 1, max(0, int(center - (timesteps - half) / 2 + j))) for j in range(timesteps - half)]
         return a + b
     return [int(round(i * (total - 1) / max(1, timesteps - 1))) for i in range(timesteps)]
+
+
+def sample_indices_vitpose(total: int, timesteps: int, mode: str = "iter") -> List[int]:
+    """Mirror vitpose_worker.py sampling so frame previews match the saved NPZ."""
+    if total <= 0:
+        return [0] * timesteps
+    if mode == "mid":
+        stride = 3 if total >= 160 else 2 if total >= 96 else 1
+        span = timesteps * stride
+        start = (total - span) // 2 if total > span else 0
+        return [min(total - 1, start + i * stride) for i in range(timesteps)]
+    if mode == "mix":
+        mid = int(timesteps * 0.75)
+        side = (timesteps - mid) // 2
+        if total >= mid:
+            start = (total - mid) // 2
+            end = start + mid - 1
+            middle = np.arange(start, end + 1, dtype=int)
+            head = np.rint(np.linspace(0, start - 1, side)).astype(int) if start > 0 and side > 0 else np.array([], dtype=int)
+            tail = (
+                np.rint(np.linspace(end + 1, total - 1, side)).astype(int)
+                if end + 1 <= total - 1 and side > 0
+                else np.array([], dtype=int)
+            )
+            idx = np.concatenate([head, middle, tail])
+            if idx.size < timesteps:
+                idx = np.concatenate([idx, np.full((timesteps - idx.size,), idx[-1], dtype=int)])
+            elif idx.size > timesteps:
+                idx = idx[np.rint(np.linspace(0, idx.size - 1, timesteps)).astype(int)]
+            return np.clip(idx, 0, total - 1).astype(int).tolist()
+    if total >= timesteps:
+        return np.rint(np.linspace(0, total - 1, timesteps)).astype(int).tolist()
+    return list(range(total)) + [total - 1] * (timesteps - total)
 
 
 # --------------------------------------------------------------- normalization
@@ -187,9 +236,130 @@ def _draw_pose_image(results, w: int, h: int, frame_bgr=None) -> np.ndarray:
     return canvas
 
 
+def _pose55_valid_mask(seq_frame: np.ndarray) -> np.ndarray:
+    pts = seq_frame.reshape(55, 2)
+    normalized = (pts + 1.0) * 0.5
+    return ~((normalized[:, 0] <= 1e-4) & (normalized[:, 1] <= 1e-4))
+
+
+def _pose55_to_points(seq_frame: np.ndarray, width: int, height: int) -> np.ndarray:
+    pts = seq_frame.reshape(55, 2)
+    pts = (pts + 1.0) * 0.5
+    pts = np.nan_to_num(np.clip(pts, 0.0, 1.0))
+    out = np.empty_like(pts, dtype=np.int32)
+    out[:, 0] = np.rint(pts[:, 0] * (width - 1)).astype(np.int32)
+    out[:, 1] = np.rint(pts[:, 1] * (height - 1)).astype(np.int32)
+    return out
+
+
+def _draw_pose55_image(seq_frame: np.ndarray, w: int, h: int) -> np.ndarray:
+    canvas = np.zeros((h, w, 3), dtype=np.uint8)
+    valid = _pose55_valid_mask(seq_frame)
+    if np.allclose(seq_frame, 0.0) or not np.any(valid):
+        return canvas
+
+    pts = _pose55_to_points(seq_frame, w, h)
+    body_edges = [
+        (0, 1), (0, 2), (1, 3), (2, 4), (5, 6), (5, 7), (7, 9),
+        (6, 8), (8, 10), (5, 11), (6, 12), (11, 12),
+    ]
+    hand_edges = [
+        (0, 1), (1, 2), (2, 3), (3, 4),
+        (0, 5), (5, 6), (6, 7), (7, 8),
+        (0, 9), (9, 10), (10, 11), (11, 12),
+        (0, 13), (13, 14), (14, 15), (15, 16),
+        (0, 17), (17, 18), (18, 19), (19, 20),
+    ]
+
+    def draw_edges(offset: int, edges, color):
+        for a, b in edges:
+            ia, ib = offset + a, offset + b
+            if valid[ia] and valid[ib]:
+                cv2.line(canvas, tuple(pts[ia]), tuple(pts[ib]), color, 2, cv2.LINE_AA)
+
+    draw_edges(0, body_edges, (180, 180, 180))
+    draw_edges(13, hand_edges, (255, 180, 0))
+    draw_edges(34, hand_edges, (0, 220, 255))
+    for idx, point in enumerate(pts):
+        if not valid[idx]:
+            continue
+        color = (0, 255, 255) if idx < 13 else (255, 180, 0) if idx < 34 else (0, 220, 255)
+        cv2.circle(canvas, tuple(point), 3 if idx < 13 else 2, color, -1, cv2.LINE_AA)
+    return canvas
+
+
+def _pose55_detection_flags(seq_frame: np.ndarray):
+    valid = _pose55_valid_mask(seq_frame)
+    return bool(valid[:13].any()), bool(valid[13:34].any()), bool(valid[34:55].any())
+
+
+def _run_subprocess(cmd: List[str]) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(cmd, cwd=str(PROJECT_ROOT), text=True, capture_output=True, check=False)
+    except FileNotFoundError:
+        if cmd and cmd[0] == "conda":
+            return subprocess.run(["conda.bat", *cmd[1:]], cwd=str(PROJECT_ROOT), text=True, capture_output=True, check=False)
+        raise
+
+
+def _extract_pose_vitpose_subprocess(video_path: str, config: "ExtractConfig") -> np.ndarray:
+    worker = Path(config.vitpose_worker or str(DEFAULT_VITPOSE_WORKER))
+    pose_config = Path(config.vitpose_config or str(DEFAULT_VITPOSE_CONFIG))
+    checkpoint = Path(config.vitpose_ckpt or str(DEFAULT_VITPOSE_CKPT))
+    if not worker.exists():
+        raise FileNotFoundError(f"ViTPose worker not found: {worker}")
+    if not pose_config.exists():
+        raise FileNotFoundError(f"ViTPose config not found: {pose_config}")
+    if not checkpoint.exists():
+        raise FileNotFoundError(f"ViTPose checkpoint not found: {checkpoint}")
+
+    with tempfile.NamedTemporaryFile(suffix=".npy", delete=False) as f:
+        out_path = Path(f.name)
+    out_path.unlink(missing_ok=True)
+
+    conda_env = config.vitpose_conda_env or os.environ.get("VITPOSE_CONDA_ENV", "kltn_vitpose")
+    cmd = [
+        "conda", "run", "-n", conda_env, "python", str(worker),
+        "--video", str(video_path),
+        "--config", str(pose_config),
+        "--checkpoint", str(checkpoint),
+        "--out", str(out_path),
+        "--clip-len", str(int(config.timesteps)),
+        "--sampling-mode", config.sampling_mode,
+        "--device", config.vitpose_device or os.environ.get("VITPOSE_DEVICE", "cuda:0"),
+        "--project-root", str(PROJECT_ROOT),
+    ]
+    try:
+        try:
+            result = _run_subprocess(cmd)
+        except FileNotFoundError as exc:
+            raise RuntimeError(
+                "ViTPose subprocess could not start because conda was not found. "
+                f"Set VITPOSE_CONDA_ENV to a valid env or install Conda on PATH. Target env: {conda_env}. {exc}"
+            ) from exc
+        if result.returncode != 0:
+            raise RuntimeError(
+                "ViTPose subprocess failed.\n"
+                f"Conda env: {conda_env}\nReturn code: {result.returncode}\n"
+                f"STDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+            )
+        if not out_path.exists():
+            raise RuntimeError(f"ViTPose did not create output file.\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
+        seq = np.load(str(out_path))
+        if seq.ndim != 2 or seq.shape[1] != KP_DIM:
+            raise ValueError(f"Invalid ViTPose output shape: {seq.shape}; expected (T, {KP_DIM}).")
+        return seq.astype(np.float32)
+    finally:
+        try:
+            out_path.unlink(missing_ok=True)
+        except Exception:
+            pass
+
+
 # --------------------------------------------------------------- config
 @dataclass
 class ExtractConfig:
+    extractor: str = "mediapipe"
     timesteps: int = 64
     sampling_mode: str = "iter"
     timeout: int = 120
@@ -205,6 +375,11 @@ class ExtractConfig:
     generate_npz: bool = True
     generate_quality_report: bool = True
     overwrite: bool = True
+    vitpose_config: str = str(DEFAULT_VITPOSE_CONFIG)
+    vitpose_ckpt: str = str(DEFAULT_VITPOSE_CKPT)
+    vitpose_conda_env: str = "kltn_vitpose"
+    vitpose_device: str = "cuda:0"
+    vitpose_worker: str = str(DEFAULT_VITPOSE_WORKER)
 
 
 def _ensure(path: str):
@@ -245,6 +420,10 @@ def extract_video(
     progress_cb: Optional[Callable[[float], None]] = None,
 ) -> Dict:
     """Run extraction on a single video. Returns manifest dict."""
+    extractor = (config.extractor or "mediapipe").lower()
+    if extractor not in ("mediapipe", "vitpose"):
+        raise ValueError(f"Unsupported extractor: {config.extractor}")
+
     safe_lbl = _safe_label(label)
     safe_vid = _safe_vid(video_name)
     base = os.path.join(outputs_root, f"{safe_vid}_{safe_lbl}")
@@ -264,7 +443,11 @@ def extract_video(
         raise RuntimeError(f"Không thể mở video: {video_path}")
     total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
     fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
-    sampled = sample_indices(total, config.timesteps, config.sampling_mode)
+    sampled = (
+        sample_indices_vitpose(total, config.timesteps, config.sampling_mode)
+        if extractor == "vitpose"
+        else sample_indices(total, config.timesteps, config.sampling_mode)
+    )
 
     # read sampled frames (sequentially for reliability)
     wanted = sorted(set(sampled))
@@ -286,8 +469,18 @@ def extract_video(
         wi += 1
     cap.release()
 
+    vitpose_seq: Optional[np.ndarray] = None
+    if extractor == "vitpose":
+        if progress_cb:
+            progress_cb(0.02)
+        vitpose_seq = _extract_pose_vitpose_subprocess(video_path, config)
+        if vitpose_seq.shape[0] != config.timesteps:
+            raise ValueError(f"Invalid ViTPose timestep count: {vitpose_seq.shape[0]}; expected {config.timesteps}.")
+        if progress_cb:
+            progress_cb(0.35)
+
     # Mediapipe
-    if _HAS_MP:
+    if extractor == "mediapipe" and _HAS_MP:
         holistic = mp.solutions.holistic.Holistic(
             static_image_mode=False, model_complexity=1,
             enable_segmentation=False, refine_face_landmarks=False,
@@ -310,7 +503,12 @@ def extract_video(
             pose_img = np.zeros_like(frame)
         else:
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            if holistic is not None:
+            if extractor == "vitpose" and vitpose_seq is not None:
+                vec = vitpose_seq[si]
+                keypoints[si] = vec
+                has_pose, has_lh, has_rh = _pose55_detection_flags(vec)
+                pose_img = _draw_pose55_image(vec, frame.shape[1], frame.shape[0])
+            elif holistic is not None:
                 res = holistic.process(rgb)
                 vec, has_pose, has_lh, has_rh = _landmarks_to_vec(res)
                 keypoints[si] = vec
@@ -338,7 +536,7 @@ def extract_video(
         pose_imgs_for_vid.append(pose_img)
         pair_imgs_for_vid.append(pair_img)
 
-        is_zero = bool(np.all(keypoints[si] == 0))
+        is_zero = bool(not np.any(_pose55_valid_mask(keypoints[si]))) if extractor == "vitpose" else bool(np.all(keypoints[si] == 0))
         frame_records.append({
             "sample_index": si,
             "original_frame_index": int(orig_idx),
@@ -352,7 +550,10 @@ def extract_video(
         })
 
         if progress_cb and config.timesteps:
-            progress_cb((si + 1) / config.timesteps)
+            if extractor == "vitpose":
+                progress_cb(0.35 + 0.65 * ((si + 1) / config.timesteps))
+            else:
+                progress_cb((si + 1) / config.timesteps)
 
     if holistic is not None:
         holistic.close()
@@ -389,6 +590,7 @@ def extract_video(
             frame_indices=np.array(sampled, dtype=np.int32),
             video=video_name,
             label=label,
+            extractor=extractor,
             sampling_mode=config.sampling_mode,
             timesteps=config.timesteps,
             original_filename=os.path.basename(video_path),
@@ -450,6 +652,7 @@ def extract_video(
         "safe_video": safe_vid,
         "timesteps": config.timesteps,
         "sampling_mode": config.sampling_mode,
+        "extractor": extractor,
         "total_original_frames": total,
         "sampled_frame_indices": sampled,
         "npz_shape": [config.timesteps, KP_DIM],

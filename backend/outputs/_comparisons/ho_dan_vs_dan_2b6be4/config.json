@@ -1,0 +1,127 @@
+{
+  "comparison_id": "ho_dan_vs_dan_2b6be4",
+  "labels": [
+    "hồ_dán",
+    "dán"
+  ],
+  "safe_labels": [
+    "ho_dan",
+    "dan"
+  ],
+  "caption_en": "Comparison between signs 'hồ_dán' and 'dán' using RGB and MediaPipe landmark visualization.",
+  "caption_vi": "So sánh trực quan giữa các ký hiệu ‘hồ_dán’ và ‘dán’ bằng ảnh RGB và landmark MediaPipe.",
+  "layout": {
+    "tile_width": 240,
+    "rgb_height": 145,
+    "pose_height": 150,
+    "cell_gap": 12,
+    "row_gap": 42,
+    "top_margin": 30,
+    "bottom_margin": 30,
+    "side_margin": 30,
+    "title_font_size": 28,
+    "frame_label_font_size": 18,
+    "background_color": "#ffffff",
+    "text_color": "#000000",
+    "include_titles": true,
+    "include_frame_labels": false
+  },
+  "groups": [
+    {
+      "video_name": "B0458",
+      "label": "hồ_dán",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 11,
+          "original_frame_index": 11,
+          "rgb_path": "B0458_ho_dan/frames/rgb/rgb_B0458_ho_dan_011_000011.jpg",
+          "pose_path": "B0458_ho_dan/frames/pose/pose_B0458_ho_dan_011_000011.jpg",
+          "pair_path": "B0458_ho_dan/frames/pair/pair_B0458_ho_dan_011_000011.jpg",
+          "thumb": "/files/B0458_ho_dan/frames/pair/pair_B0458_ho_dan_011_000011.jpg"
+        },
+        {
+          "sample_index": 13,
+          "original_frame_index": 13,
+          "rgb_path": "B0458_ho_dan/frames/rgb/rgb_B0458_ho_dan_013_000013.jpg",
+          "pose_path": "B0458_ho_dan/frames/pose/pose_B0458_ho_dan_013_000013.jpg",
+          "pair_path": "B0458_ho_dan/frames/pair/pair_B0458_ho_dan_013_000013.jpg",
+          "thumb": "/files/B0458_ho_dan/frames/pair/pair_B0458_ho_dan_013_000013.jpg"
+        },
+        {
+          "sample_index": 16,
+          "original_frame_index": 16,
+          "rgb_path": "B0458_ho_dan/frames/rgb/rgb_B0458_ho_dan_016_000016.jpg",
+          "pose_path": "B0458_ho_dan/frames/pose/pose_B0458_ho_dan_016_000016.jpg",
+          "pair_path": "B0458_ho_dan/frames/pair/pair_B0458_ho_dan_016_000016.jpg",
+          "thumb": "/files/B0458_ho_dan/frames/pair/pair_B0458_ho_dan_016_000016.jpg"
+        },
+        {
+          "sample_index": 29,
+          "original_frame_index": 29,
+          "rgb_path": "B0458_ho_dan/frames/rgb/rgb_B0458_ho_dan_029_000029.jpg",
+          "pose_path": "B0458_ho_dan/frames/pose/pose_B0458_ho_dan_029_000029.jpg",
+          "pair_path": "B0458_ho_dan/frames/pair/pair_B0458_ho_dan_029_000029.jpg",
+          "thumb": "/files/B0458_ho_dan/frames/pair/pair_B0458_ho_dan_029_000029.jpg"
+        },
+        {
+          "sample_index": 32,
+          "original_frame_index": 32,
+          "rgb_path": "B0458_ho_dan/frames/rgb/rgb_B0458_ho_dan_032_000032.jpg",
+          "pose_path": "B0458_ho_dan/frames/pose/pose_B0458_ho_dan_032_000032.jpg",
+          "pair_path": "B0458_ho_dan/frames/pair/pair_B0458_ho_dan_032_000032.jpg",
+          "thumb": "/files/B0458_ho_dan/frames/pair/pair_B0458_ho_dan_032_000032.jpg"
+        }
+      ]
+    },
+    {
+      "video_name": "B0463",
+      "label": "dán",
+      "source": "extraction",
+      "selected_frames": [
+        {
+          "sample_index": 8,
+          "original_frame_index": 8,
+          "rgb_path": "B0463_dan/frames/rgb/rgb_B0463_dan_008_000008.jpg",
+          "pose_path": "B0463_dan/frames/pose/pose_B0463_dan_008_000008.jpg",
+          "pair_path": "B0463_dan/frames/pair/pair_B0463_dan_008_000008.jpg",
+          "thumb": "/files/B0463_dan/frames/pair/pair_B0463_dan_008_000008.jpg"
+        },
+        {
+          "sample_index": 9,
+          "original_frame_index": 9,
+          "rgb_path": "B0463_dan/frames/rgb/rgb_B0463_dan_009_000009.jpg",
+          "pose_path": "B0463_dan/frames/pose/pose_B0463_dan_009_000009.jpg",
+          "pair_path": "B0463_dan/frames/pair/pair_B0463_dan_009_000009.jpg",
+          "thumb": "/files/B0463_dan/frames/pair/pair_B0463_dan_009_000009.jpg"
+        },
+        {
+          "sample_index": 23,
+          "original_frame_index": 23,
+          "rgb_path": "B0463_dan/frames/rgb/rgb_B0463_dan_023_000023.jpg",
+          "pose_path": "B0463_dan/frames/pose/pose_B0463_dan_023_000023.jpg",
+          "pair_path": "B0463_dan/frames/pair/pair_B0463_dan_023_000023.jpg",
+          "thumb": "/files/B0463_dan/frames/pair/pair_B0463_dan_023_000023.jpg"
+        },
+        {
+          "sample_index": 26,
+          "original_frame_index": 26,
+          "rgb_path": "B0463_dan/frames/rgb/rgb_B0463_dan_026_000026.jpg",
+          "pose_path": "B0463_dan/frames/pose/pose_B0463_dan_026_000026.jpg",
+          "pair_path": "B0463_dan/frames/pair/pair_B0463_dan_026_000026.jpg",
+          "thumb": "/files/B0463_dan/frames/pair/pair_B0463_dan_026_000026.jpg"
+        },
+        {
+          "sample_index": 28,
+          "original_frame_index": 28,
+          "rgb_path": "B0463_dan/frames/rgb/rgb_B0463_dan_028_000028.jpg",
+          "pose_path": "B0463_dan/frames/pose/pose_B0463_dan_028_000028.jpg",
+          "pair_path": "B0463_dan/frames/pair/pair_B0463_dan_028_000028.jpg",
+          "thumb": "/files/B0463_dan/frames/pair/pair_B0463_dan_028_000028.jpg"
+        }
+      ]
+    }
+  ],
+  "annotations": [],
+  "created_at": "2026-05-20T19:51:05"
+}
