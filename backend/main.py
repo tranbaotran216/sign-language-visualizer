@@ -725,3 +725,59 @@ def editor_export(payload: dict = Body(...)):
     if not data_url:
         raise HTTPException(400, "data_url required")
     return _editor.export_image_from_dataurl(OUTPUTS_DIR, pid, data_url, fmt)
+
+
+# ============================================================
+# Phase 8 — Overlay (temporal motion visualization)
+# ============================================================
+from services import overlay_renderer as _ov
+
+
+@app.get("/api/overlay/presets")
+def overlay_presets():
+    return {
+        "landmark_presets": _ov.LANDMARK_PRESETS,
+        "gradients": list(_ov.GRADIENTS.keys()),
+        "all_landmarks": list(_ov.LANDMARKS.keys()),
+        "overlay_types": ["skeleton", "wrist_path", "fingertip_path", "rgb_overlay"],
+        "layout_modes": ["single", "multi_row", "side_by_side"],
+        "background_modes": ["rgb_middle", "rgb_first", "rgb_index", "white", "dark", "transparent"],
+    }
+
+
+@app.post("/api/overlay/create")
+def overlay_create(payload: Dict = Body(...)):
+    try:
+        return _ov.create_overlay(OUTPUTS_DIR, payload)
+    except FileNotFoundError as e:
+        raise HTTPException(404, str(e))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.post("/api/overlay/{project_id}/rerender")
+def overlay_rerender(project_id: str, payload: Dict = Body(...)):
+    payload = {**payload, "overlay_project_id": project_id}
+    return _ov.create_overlay(OUTPUTS_DIR, payload)
+
+
+@app.get("/api/overlay")
+def overlay_list():
+    return {"items": _ov.list_overlays(OUTPUTS_DIR)}
+
+
+@app.get("/api/overlay/{project_id}")
+def overlay_get(project_id: str):
+    cfg = _ov.load_project(OUTPUTS_DIR, project_id)
+    if not cfg:
+        raise HTTPException(404, "overlay not found")
+    return cfg
+
+
+@app.delete("/api/overlay/{project_id}")
+def overlay_delete(project_id: str):
+    if "/" in project_id or ".." in project_id:
+        raise HTTPException(400, "invalid id")
+    if not _ov.delete_project(OUTPUTS_DIR, project_id):
+        raise HTTPException(404, "not found")
+    return {"ok": True}
